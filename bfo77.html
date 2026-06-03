@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>チェックイン | BFO2026 (Admin)</title>
+<meta name="robots" content="noindex,nofollow">
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@700;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #ffffff; --bg-soft: #fbf6ec; --fg: #1a1612; --fg-soft: #5a4a3a;
+    --shu: #d63b2c; --ki: #f0b429; --ai: #1e5a82; --midori: #3a8a5e;
+    --border: #1a161222;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--fg); }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", system-ui, sans-serif; min-height: 100vh; padding: 16px; }
+  .container { max-width: 520px; margin: 0 auto; }
+  a { color: inherit; }
+
+  /* Header */
+  .header { background: var(--fg); color: var(--bg); padding: 18px 22px; position: relative; overflow: hidden; }
+  .header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--shu) 0 33%, var(--ki) 33% 66%, var(--ai) 66% 100%); }
+  .header h1 { font-family: "Noto Serif JP", serif; font-size: 18px; font-weight: 900; letter-spacing: 0.02em; }
+  .header .sub { font-size: 11px; opacity: 0.75; margin-top: 4px; font-family: "JetBrains Mono", monospace; letter-spacing: 0.1em; }
+  .admin-badge { display: inline-block; margin-top: 8px; padding: 3px 8px; background: var(--shu); color: var(--bg); font-size: 10px; font-weight: 800; letter-spacing: 0.15em; }
+
+  /* Mode toggle */
+  .mode-toggle { display: flex; gap: 0; background: var(--bg); border: 2px solid var(--fg); margin: 14px 0; box-shadow: 4px 4px 0 var(--fg); }
+  .mode-toggle button { flex: 1; padding: 14px 8px; border: none; background: transparent; color: var(--fg); cursor: pointer; font-weight: 700; font-size: 13px; transition: background .2s; font-family: inherit; letter-spacing: 0.05em; }
+  .mode-toggle button.active { background: var(--fg); color: var(--bg); }
+  .mode-toggle button.active.party { background: var(--ki); color: var(--fg); }
+  .mode-toggle button.active.eve { background: var(--ai); color: #fff; }
+
+  /* Stats */
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 14px; }
+  .stat { background: var(--bg-soft); border: 1.5px solid var(--fg); padding: 10px 8px; text-align: center; }
+  .stat .num { font-size: 22px; font-weight: 900; font-family: "JetBrains Mono", monospace; line-height: 1.1; }
+  .stat .lbl { font-size: 10px; color: var(--fg-soft); margin-top: 4px; letter-spacing: 0.1em; font-weight: 700; }
+  .stat.done .num { color: var(--midori); }
+  .stat.todo .num { color: var(--shu); }
+
+  /* Scanner */
+  .scanner-wrap { background: var(--bg-soft); border: 2px solid var(--fg); padding: 14px; box-shadow: 4px 4px 0 var(--fg); margin-bottom: 14px; }
+  #qr-reader { width: 100%; }
+  #qr-reader video { border: 1.5px solid var(--fg); }
+  .scanner-status { font-size: 11px; color: var(--fg-soft); text-align: center; margin-top: 8px; letter-spacing: 0.1em; font-weight: 700; }
+  .scanner-status.scanning::before { content: '◉ '; color: var(--shu); animation: blink 1.2s infinite; }
+  @keyframes blink { 50% { opacity: .3; } }
+
+  /* Manual input */
+  .manual { background: var(--bg); border: 1.5px solid var(--fg); padding: 14px; margin-bottom: 14px; }
+  .manual label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: var(--fg-soft); display: block; margin-bottom: 8px; }
+  .manual-row { display: flex; gap: 8px; }
+  .manual input { flex: 1; padding: 12px; font-family: "JetBrains Mono", monospace; font-size: 14px; border: 1.5px solid var(--fg); background: var(--bg); }
+  .manual button { padding: 12px 18px; background: var(--ai); color: var(--bg); border: none; font-weight: 700; cursor: pointer; box-shadow: 3px 3px 0 var(--fg); font-family: inherit; }
+
+  /* Result toasts */
+  .result-area { margin-top: 14px; }
+  .result { padding: 18px 20px; border: 2px solid var(--fg); margin-bottom: 8px; box-shadow: 4px 4px 0 var(--fg); animation: slidein .25s ease-out; position: relative; }
+  @keyframes slidein { from { transform: translateY(-10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .result.ok { background: #ecf8ee; border-color: var(--midori); box-shadow: 4px 4px 0 var(--midori); }
+  .result.dup { background: #fff8e1; border-color: var(--ki); box-shadow: 4px 4px 0 var(--ki); }
+  .result.err { background: #fef2f2; border-color: var(--shu); box-shadow: 4px 4px 0 var(--shu); }
+  .result .icon { font-size: 28px; line-height: 1; margin-bottom: 8px; }
+  .result.ok .icon { color: var(--midori); }
+  .result.dup .icon { color: var(--ki); }
+  .result.err .icon { color: var(--shu); }
+  .result .who { font-family: "Noto Serif JP", serif; font-size: 22px; font-weight: 900; margin-bottom: 4px; }
+  .result .pid { font-family: "JetBrains Mono", monospace; font-size: 13px; color: var(--fg-soft); letter-spacing: 0.05em; }
+  .result .msg { font-size: 13px; margin-top: 6px; font-weight: 700; }
+  .result .x { position: absolute; top: 8px; right: 12px; cursor: pointer; font-size: 18px; color: var(--fg-soft); }
+
+  /* PIN gate */
+  .gate { position: fixed; inset: 0; background: rgba(26,22,18,0.92); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
+  .gate-card { background: var(--bg); border: 2px solid var(--fg); box-shadow: 8px 8px 0 var(--shu); padding: 28px 24px; max-width: 360px; width: 100%; text-align: center; }
+  .gate-card h2 { font-family: "Noto Serif JP", serif; font-size: 18px; font-weight: 900; margin-bottom: 6px; }
+  .gate-card p { font-size: 12px; color: var(--fg-soft); margin-bottom: 16px; }
+  .pin-input { width: 100%; padding: 16px; font-size: 24px; text-align: center; letter-spacing: 0.4em; font-family: "JetBrains Mono", monospace; border: 1.5px solid var(--fg); background: var(--bg-soft); margin-bottom: 12px; }
+  .gate-card button { width: 100%; padding: 14px; background: var(--shu); color: var(--bg); border: none; font-weight: 800; font-size: 14px; cursor: pointer; box-shadow: 4px 4px 0 var(--fg); font-family: inherit; }
+
+  .footer-bar { margin-top: 22px; display: flex; justify-content: space-between; font-size: 10px; color: var(--fg-soft); font-family: "JetBrains Mono", monospace; letter-spacing: 0.1em; }
+  .logout { cursor: pointer; text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<div id="gate" class="gate" style="display:none;">
+  <div class="gate-card">
+    <h2>管理者認証</h2>
+    <p>BFO2026 受付システムにアクセスするには PIN が必要です</p>
+    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="4" id="pin-input" class="pin-input" placeholder="••••" autofocus />
+    <button id="pin-submit">入る</button>
+  </div>
+</div>
+
+<div class="container" id="app" style="display:none;">
+  <div class="header">
+    <div style="font-size: 10px; font-weight: 700; letter-spacing: 0.3em; color: var(--ki); margin-bottom: 6px;">◆ ADMIN · CHECK-IN</div>
+    <h1>BFO2026 受付システム</h1>
+    <div class="sub">2026.07.07 LAGUNA GARDEN</div>
+    <div class="admin-badge">ADMIN ONLY</div>
+  </div>
+
+  <div class="mode-toggle">
+    <button id="mode-main" class="active">受付</button>
+    <button id="mode-eve">前夜祭</button>
+    <button id="mode-party">懇親会</button>
+  </div>
+
+  <div class="stats" id="stats">
+    <div class="stat"><div class="num" id="stat-total">—</div><div class="lbl">登録</div></div>
+    <div class="stat done"><div class="num" id="stat-done">—</div><div class="lbl">受付済</div></div>
+    <div class="stat todo"><div class="num" id="stat-todo">—</div><div class="lbl">未受付</div></div>
+  </div>
+
+  <div class="scanner-wrap">
+    <div id="qr-reader"></div>
+    <div class="scanner-status scanning" id="scanner-status">QRをかざしてください</div>
+  </div>
+
+  <div class="manual">
+    <label>手動入力（QRが読めない場合）</label>
+    <div class="manual-row">
+      <input type="text" id="manual-id" placeholder="BFO2026-001" autocomplete="off" />
+      <button id="manual-submit">送信</button>
+    </div>
+  </div>
+
+  <div class="result-area" id="result-area"></div>
+
+  <div class="footer-bar">
+    <span id="conn-status">CONNECTED</span>
+    <span class="logout" id="logout">ログアウト</span>
+  </div>
+</div>
+
+<script>
+/* ─────────────────────────────────────────────────────────────
+   設定
+─────────────────────────────────────────────────────────────── */
+const CONFIG = {
+  WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbyuNVH30PwLzKxuFrMkMrpc7Lgy-ESHxkoWs3NNqQbdZ-DL5vCD_k2f4yjAMa1WEm3vSg/exec',
+  PIN: '7707',
+  STATS_REFRESH_MS: 30 * 1000,
+};
+
+let mode = 'checkin'; // 'checkin' | 'party_checkin' | 'eve_party_checkin'
+let scanner = null;
+let lastScanned = null;
+let lastScannedAt = 0;
+
+/* ─────────────────────────────────────────────────────────────
+   PIN ゲート
+─────────────────────────────────────────────────────────────── */
+function checkPin() {
+  const unlocked = localStorage.getItem('bfo2026_checkin_unlocked') === '1';
+  if (unlocked) { showApp(); return; }
+  document.getElementById('gate').style.display = 'flex';
+  document.getElementById('pin-input').focus();
+}
+function tryPin() {
+  const v = document.getElementById('pin-input').value.trim();
+  if (v === CONFIG.PIN) {
+    localStorage.setItem('bfo2026_checkin_unlocked', '1');
+    showApp();
+  } else {
+    document.getElementById('pin-input').value = '';
+    document.getElementById('pin-input').placeholder = '違います';
+    setTimeout(() => document.getElementById('pin-input').placeholder = '••••', 1200);
+  }
+}
+function showApp() {
+  document.getElementById('gate').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  startScanner();
+  refreshStats();
+  setInterval(refreshStats, CONFIG.STATS_REFRESH_MS);
+}
+
+document.getElementById('pin-submit').addEventListener('click', tryPin);
+document.getElementById('pin-input').addEventListener('keydown', e => { if (e.key === 'Enter') tryPin(); });
+document.getElementById('logout').addEventListener('click', () => {
+  localStorage.removeItem('bfo2026_checkin_unlocked');
+  location.reload();
+});
+
+/* ─────────────────────────────────────────────────────────────
+   モード切替
+─────────────────────────────────────────────────────────────── */
+document.getElementById('mode-main').addEventListener('click', () => setMode('checkin'));
+document.getElementById('mode-eve').addEventListener('click', () => setMode('eve_party_checkin'));
+document.getElementById('mode-party').addEventListener('click', () => setMode('party_checkin'));
+function setMode(m) {
+  mode = m;
+  document.getElementById('mode-main').classList.toggle('active', m === 'checkin');
+  document.getElementById('mode-eve').classList.toggle('active', m === 'eve_party_checkin');
+  document.getElementById('mode-eve').classList.toggle('eve', m === 'eve_party_checkin');
+  document.getElementById('mode-party').classList.toggle('active', m === 'party_checkin');
+  document.getElementById('mode-party').classList.toggle('party', m === 'party_checkin');
+  refreshStats();
+}
+
+/* ─────────────────────────────────────────────────────────────
+   QR スキャナー
+─────────────────────────────────────────────────────────────── */
+function startScanner() {
+  scanner = new Html5Qrcode('qr-reader');
+  const cfg = { fps: 10, qrbox: { width: 240, height: 240 }, aspectRatio: 1.0 };
+  scanner.start({ facingMode: 'environment' }, cfg, onScanSuccess, () => {})
+    .catch(err => {
+      document.getElementById('scanner-status').textContent = 'カメラを起動できません: ' + err;
+      document.getElementById('scanner-status').classList.remove('scanning');
+    });
+}
+
+function onScanSuccess(decoded) {
+  const now = Date.now();
+  if (decoded === lastScanned && now - lastScannedAt < 3000) return; // 連続スキャン抑止
+  lastScanned = decoded;
+  lastScannedAt = now;
+  doCheckin(decoded);
+}
+
+document.getElementById('manual-submit').addEventListener('click', () => {
+  const v = document.getElementById('manual-id').value.trim();
+  if (v) { doCheckin(v); document.getElementById('manual-id').value = ''; }
+});
+document.getElementById('manual-id').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('manual-submit').click();
+});
+
+/* ─────────────────────────────────────────────────────────────
+   チェックイン送信
+─────────────────────────────────────────────────────────────── */
+async function doCheckin(id) {
+  if (!CONFIG.WEB_APP_URL || CONFIG.WEB_APP_URL === 'PASTE_HERE_AFTER_DEPLOY') {
+    showResult({ ok: false, error: 'Web App URL 未設定' }, id);
+    return;
+  }
+  try {
+    const r = await fetch(CONFIG.WEB_APP_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: mode, participant_id: id }),
+    });
+    const j = await r.json();
+    showResult(j, id);
+    refreshStats();
+  } catch (err) {
+    showResult({ ok: false, error: err.message || '通信エラー' }, id);
+  }
+}
+
+function showResult(j, id) {
+  const area = document.getElementById('result-area');
+  let cls, icon, who, msg;
+  if (!j.ok) {
+    cls = 'err'; icon = '✕';
+    who = '見つかりません';
+    msg = (j.error || '') + ' (' + id + ')';
+  } else if (j.already) {
+    cls = 'dup'; icon = '⚠';
+    who = j.name || j.participant_id;
+    msg = mode === 'eve_party_checkin' ? '前夜祭は既にチェックイン済み'
+        : mode === 'party_checkin' ? '懇親会は既にチェックイン済み'
+        : '既にチェックイン済み';
+  } else {
+    cls = 'ok'; icon = '✓';
+    who = j.name || j.participant_id;
+    msg = mode === 'eve_party_checkin' ? '前夜祭チェックイン完了'
+        : mode === 'party_checkin' ? '懇親会チェックイン完了'
+        : 'チェックイン完了';
+  }
+  const el = document.createElement('div');
+  el.className = 'result ' + cls;
+  el.innerHTML = `
+    <div class="icon">${icon}</div>
+    <div class="who">${escapeHtml(who)}</div>
+    <div class="pid">${escapeHtml(j.participant_id || id || '')}</div>
+    <div class="msg">${escapeHtml(msg)}</div>
+    <div class="x">×</div>
+  `;
+  el.querySelector('.x').addEventListener('click', () => el.remove());
+  area.insertBefore(el, area.firstChild);
+  // 古い結果は5件まで
+  while (area.children.length > 5) area.lastChild.remove();
+  // 音（簡易ビープ）
+  if (cls === 'ok') beep(800, 80);
+  if (cls === 'dup') beep(440, 200);
+  if (cls === 'err') { beep(220, 120); setTimeout(() => beep(220, 120), 150); }
+  // 5秒で自動消去
+  setTimeout(() => el.remove(), 8000);
+}
+
+function beep(freq, ms) {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ctx.createOscillator(); const g = ctx.createGain();
+    o.frequency.value = freq; o.connect(g); g.connect(ctx.destination);
+    g.gain.setValueAtTime(0.15, ctx.currentTime);
+    o.start(); setTimeout(() => { o.stop(); ctx.close(); }, ms);
+  } catch (_) {}
+}
+
+/* ─────────────────────────────────────────────────────────────
+   統計
+─────────────────────────────────────────────────────────────── */
+async function refreshStats() {
+  if (!CONFIG.WEB_APP_URL || CONFIG.WEB_APP_URL === 'PASTE_HERE_AFTER_DEPLOY') return;
+  try {
+    const r = await fetch(CONFIG.WEB_APP_URL + '?action=stats');
+    const j = await r.json();
+    if (!j.ok) return;
+    if (mode === 'party_checkin') {
+      document.getElementById('stat-total').textContent = j.party_total;
+      document.getElementById('stat-done').textContent = j.party_checked_in;
+      document.getElementById('stat-todo').textContent = Math.max(0, j.party_total - j.party_checked_in);
+    } else if (mode === 'eve_party_checkin') {
+      document.getElementById('stat-total').textContent = j.eve_party_total;
+      document.getElementById('stat-done').textContent = j.eve_party_checked_in;
+      document.getElementById('stat-todo').textContent = Math.max(0, j.eve_party_total - j.eve_party_checked_in);
+    } else {
+      document.getElementById('stat-total').textContent = j.total;
+      document.getElementById('stat-done').textContent = j.checked_in;
+      document.getElementById('stat-todo').textContent = Math.max(0, j.total - j.checked_in);
+    }
+    document.getElementById('conn-status').textContent = 'CONNECTED ' + new Date().toLocaleTimeString('ja-JP');
+  } catch (_) {
+    document.getElementById('conn-status').textContent = 'OFFLINE';
+  }
+}
+
+function escapeHtml(s) {
+  return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+checkPin();
+</script>
+</body>
+</html>

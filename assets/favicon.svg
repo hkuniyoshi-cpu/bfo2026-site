@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Business Fusion Okinawa 2026">
+  <!-- 黒角丸ベース（サイトのヘッダー・ボタン基調と統一） -->
+  <rect width="64" height="64" rx="10" ry="10" fill="#1a1612"/>
+
+  <!-- 上端のトリコロール帯：BFOのシグネチャ（赤=BNI沖縄／黄=BNI台中／青=BNI千葉京葉） -->
+  <rect x="0"  y="0" width="22" height="6" fill="#d63b2c"/>
+  <rect x="22" y="0" width="20" height="6" fill="#f0b429"/>
+  <rect x="42" y="0" width="22" height="6" fill="#1e5a82"/>
+
+  <!-- 中央のボールド "B"（Business Fusion の頭文字） -->
+  <text x="32" y="50"
+        font-family="Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+        font-weight="900" font-size="42" fill="#ffffff"
+        text-anchor="middle" letter-spacing="-0.02em">B</text>
+
+  <!-- 下端アクセント：年号 2026（小サイズでも判別性を保つため細めに） -->
+  <text x="32" y="60"
+        font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace"
+        font-weight="700" font-size="7" fill="#f0b429"
+        text-anchor="middle" letter-spacing="0.18em">2026</text>
+</svg>

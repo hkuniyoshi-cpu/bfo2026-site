@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>事前申込み | Business Fusion Okinawa 2026</title>
+<meta name="description" content="Business Fusion Okinawa 2026 事前申込みフォーム — 2026年7月7日 ラグナガーデンホテル" />
+<meta name="robots" content="noindex, nofollow" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="icon" type="image/png" href="assets/bni-logo.png" />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Cormorant+Garamond:ital,wght@1,500;1,700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  :root {
+    --bg: #ffffff; --bg-soft: #fbf6ec; --fg: #1a1612; --fg-soft: #5a4a3a;
+    --shu: #d63b2c; --ki: #f0b429; --ai: #1e5a82; --midori: #3a8a5e;
+    --border: #1a161222;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--fg); }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", "Segoe UI", system-ui, sans-serif;
+    min-height: 100vh; padding: 24px 16px 80px; line-height: 1.6;
+  }
+  .container { max-width: 640px; margin: 0 auto; }
+  a { color: inherit; }
+
+  /* Header */
+  .header { padding: 32px 28px; background: var(--fg); color: var(--bg); margin-bottom: 0; position: relative; overflow: hidden; }
+  .header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(90deg, var(--shu) 0 33%, var(--ki) 33% 66%, var(--ai) 66% 100%); }
+  .header .tag { font-size: 10px; font-weight: 700; letter-spacing: 0.3em; opacity: 0.7; margin-top: 8px; }
+  .header h1 { font-family: "Noto Serif JP", serif; font-size: 28px; font-weight: 900; letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 6px; }
+  .header .accent { font-family: "Cormorant Garamond", serif; font-style: italic; color: var(--ki); font-size: 24px; font-weight: 700; margin-top: 14px; }
+  .header .meta { font-size: 12px; opacity: 0.75; margin-top: 6px; font-family: "JetBrains Mono", monospace; letter-spacing: 0.08em; }
+
+  /* Lang switcher */
+  .lang { display: flex; gap: 0; background: var(--bg); border: 2px solid var(--fg); padding: 0; margin: 18px 0 22px; box-shadow: 4px 4px 0 var(--fg); }
+  .lang button { flex: 1; padding: 12px 4px; border: none; background: transparent; color: var(--fg); cursor: pointer; font-weight: 700; font-size: 12px; letter-spacing: 0.1em; transition: background .2s; font-family: inherit; }
+  .lang button.active { background: var(--fg); color: var(--bg); }
+
+  /* Section card */
+  .card { background: var(--bg-soft); border: 1.5px solid var(--fg); padding: 24px 22px; margin-bottom: 14px; box-shadow: 4px 4px 0 var(--fg); position: relative; }
+  .card-title { font-size: 11px; font-weight: 800; letter-spacing: 0.22em; color: var(--shu); margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
+  .card-title::before { content: '◆'; }
+  .step-badge { display: inline-block; background: var(--ai); color: #fff; font-size: 10px; font-weight: 800; letter-spacing: 0.1em; padding: 2px 8px; margin-right: 6px; vertical-align: middle; }
+
+  /* Form */
+  .field { margin-bottom: 16px; }
+  .field:last-child { margin-bottom: 0; }
+  .label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 6px; color: var(--fg); }
+  .label .req { color: var(--shu); margin-left: 4px; }
+  .label .opt { color: var(--fg-soft); margin-left: 4px; font-weight: 400; font-size: 11px; }
+  .hint { font-size: 11px; color: var(--fg-soft); margin-top: 4px; }
+  input[type="text"], input[type="email"], input[type="tel"], select, textarea {
+    width: 100%; padding: 12px 14px; font-size: 15px;
+    border: 1.5px solid var(--fg); background: var(--bg); color: var(--fg);
+    font-family: inherit; line-height: 1.4;
+    transition: box-shadow .2s, transform .15s;
+  }
+  textarea { resize: vertical; min-height: 80px; }
+  input:focus, select:focus, textarea:focus { outline: none; box-shadow: 4px 4px 0 var(--shu); transform: translate(-2px, -2px); }
+  select { appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M2 4 L6 8 L10 4' fill='none' stroke='%231a1612' stroke-width='2'/></svg>"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 40px; }
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .checkbox-row { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; border: 1.5px solid var(--fg); background: var(--bg); cursor: pointer; user-select: none; transition: box-shadow .2s, transform .15s; }
+  .checkbox-row:hover { box-shadow: 4px 4px 0 var(--midori); transform: translate(-2px, -2px); }
+  .checkbox-row input[type="checkbox"] { width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0; accent-color: var(--shu); }
+  .checkbox-row .ck-text { font-size: 13px; line-height: 1.5; }
+  .checkbox-row .ck-text strong { font-weight: 800; }
+  .checkbox-row .ck-text small { display: block; color: var(--fg-soft); margin-top: 4px; font-size: 11px; }
+
+  /* Radio (ticket type) */
+  .radio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .radio-cell { padding: 12px; border: 1.5px solid var(--fg); background: var(--bg); cursor: pointer; text-align: center; font-size: 13px; font-weight: 700; transition: all .2s; }
+  .radio-cell input { display: none; }
+  .radio-cell:has(input:checked) { background: var(--fg); color: var(--bg); box-shadow: 3px 3px 0 var(--shu); transform: translate(-2px, -2px); }
+
+  /* Submit */
+  .submit { width: 100%; padding: 18px; background: var(--shu); color: var(--bg); border: none; font-size: 16px; font-weight: 800; letter-spacing: 0.06em; cursor: pointer; box-shadow: 6px 6px 0 var(--fg); transition: transform .2s, box-shadow .2s; font-family: inherit; margin-top: 8px; }
+  .submit:hover:not(:disabled) { transform: translate(-3px, -3px); box-shadow: 9px 9px 0 var(--fg); }
+  .submit:active:not(:disabled) { transform: translate(2px, 2px); box-shadow: 4px 4px 0 var(--fg); }
+  .submit:disabled { opacity: 0.5; cursor: wait; }
+
+  /* Success */
+  .success { background: var(--bg); border: 2.5px solid var(--fg); box-shadow: 8px 8px 0 var(--shu); padding: 32px 26px; text-align: center; }
+  .success .check { width: 64px; height: 64px; border-radius: 50%; background: var(--midori); color: white; font-size: 36px; line-height: 64px; margin: 0 auto 18px; box-shadow: 4px 4px 0 var(--fg); }
+  .success h2 { font-family: "Noto Serif JP", serif; font-size: 24px; font-weight: 900; margin-bottom: 8px; }
+  .success .pid { font-family: "JetBrains Mono", monospace; font-size: 22px; font-weight: 700; color: var(--shu); letter-spacing: 0.05em; margin: 18px 0 8px; }
+  .success .pid-label { font-size: 10px; letter-spacing: 0.3em; color: var(--fg-soft); font-weight: 700; }
+  /* QRコード枠：内部要素を確実に中央寄せ */
+  .qr-wrap {
+    padding: 20px; background: var(--bg-soft); border: 1.5px solid var(--fg);
+    display: inline-flex; align-items: center; justify-content: center;
+    margin: 0 auto; box-sizing: content-box;
+    width: 220px; height: 220px;
+  }
+  .qr-wrap > * { margin: 0 auto !important; display: block !important; }
+  .qr-wrap canvas, .qr-wrap img, .qr-wrap table {
+    margin: 0 auto !important; display: block !important;
+    width: 220px !important; height: 220px !important;
+  }
+  .qr-wrap table td { padding: 0 !important; border: 0 !important; }
+  .save-hint { font-size: 12px; color: var(--fg-soft); line-height: 1.7; margin-bottom: 24px; }
+  .party-cta { background: var(--ki); border: 1.5px solid var(--fg); padding: 16px 18px; box-shadow: 4px 4px 0 var(--fg); margin-bottom: 14px; text-align: left; }
+  .party-cta strong { display: block; font-size: 13px; font-weight: 800; margin-bottom: 6px; }
+  .party-cta a { display: inline-block; margin-top: 8px; padding: 10px 18px; background: var(--fg); color: var(--bg); font-weight: 700; font-size: 13px; text-decoration: none; }
+
+  .back-link { display: inline-block; margin-top: 8px; padding: 10px 20px; border: 1.5px solid var(--fg); color: var(--fg); text-decoration: none; font-size: 13px; font-weight: 700; }
+
+  .error-box { background: #fef2f2; border: 1.5px solid var(--shu); padding: 14px 18px; margin-bottom: 14px; color: var(--shu); font-weight: 700; font-size: 13px; }
+
+  .accent-italic { font-family: "Cormorant Garamond", serif; font-style: italic; color: var(--shu); }
+
+  /* Required hint at top */
+  .req-note { font-size: 11px; color: var(--fg-soft); margin-bottom: 10px; }
+
+  @media (max-width: 480px) {
+    .header h1 { font-size: 24px; }
+    .row-2 { grid-template-columns: 1fr; }
+    .radio-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container" id="app">
+  <div class="header">
+    <div style="font-size: 10px; font-weight: 700; letter-spacing: 0.3em; color: #d63b2c; margin-bottom: 8px;">◆ REGISTRATION</div>
+    <h1 id="h-title">事前申込み</h1>
+    <div class="accent" id="h-sub">Business Fusion Okinawa 2026</div>
+    <div class="meta">2026.07.07 TUE · LAGUNA GARDEN HOTEL</div>
+  </div>
+
+  <div class="lang" id="lang-switcher"></div>
+
+  <div id="form-area"></div>
+
+  <a href="index.html" class="back-link" id="back-link" style="margin-top: 14px;">← トップに戻る</a>
+</div>
+
+<script>
+/* ─────────────────────────────────────────────────────────────
+   設定
+─────────────────────────────────────────────────────────────── */
+const CONFIG = {
+  WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbyuNVH30PwLzKxuFrMkMrpc7Lgy-ESHxkoWs3NNqQbdZ-DL5vCD_k2f4yjAMa1WEm3vSg/exec', // ← Apps Script デプロイ後に書き換え
+};
+
+/* ─────────────────────────────────────────────────────────────
+   多言語ラベル
+─────────────────────────────────────────────────────────────── */
+const I18N = {
+  ja: {
+    h_title: '事前申込み', h_sub: 'Business Fusion Okinawa 2026',
+    back: '← トップに戻る',
+    sec_basic: '基本情報', sec_ticket: '参加区分', sec_bni: 'BNI所属', sec_other: 'その他', sec_party: '懇親会',
+    last_name: '姓', first_name: '名', display_name: '表示名', display_hint: '名札に印字されます。空欄なら姓+名で自動設定',
+    company_name: '会社名・屋号', company_hint: '個人事業主の方は屋号または氏名をご記入ください',
+    business_type: '業種', business_type_hint: '当てはまる業種を1つ選択してください',
+    business_type_select: '— 選択してください —',
+    business_type_options: [
+      'IT・情報通信',
+      '製造業',
+      '建設・建築',
+      '不動産',
+      '飲食・宿泊',
+      '小売・流通',
+      '卸売',
+      '金融・保険',
+      '医療・福祉・介護',
+      '美容・健康',
+      '教育・学習支援',
+      '士業（弁護士・税理士・行政書士・社労士等）',
+      'コンサルティング',
+      '広告・マーケティング',
+      'メディア・出版・印刷',
+      '運輸・物流',
+      '農林水産',
+      '観光・レジャー',
+      'エネルギー・公共',
+      'サービス業（その他）',
+      'その他',
+    ],
+    email: 'メールアドレス', email_hint: '申込み完了後、参加者IDとQRコードをこちらのメールアドレスへお送りします（送信専用）',
+    ticket_member: 'BNIメンバー', ticket_general: '一般', ticket_invite: '招待', ticket_other: 'その他',
+    region: 'リージョン', region_select: '選択してください', region_hint: 'BNIメンバーの方のみ',
+    chapter: 'チャプター', chapter_select: '先にリージョンを選択', chapter_none: '（該当なし）',
+    region_other_option: '— その他（リストに無い場合）—',
+    chapter_other_option: '— その他（リストに無い場合）—',
+    region_other_label: 'リージョン名を入力',
+    chapter_other_label: 'チャプター名を入力',
+    region_other_placeholder: '例：沖縄 / 関西 / 海外チャプター 等',
+    chapter_other_placeholder: '所属チャプター名を入力してください',
+    bni_other_hint: '※ リストにリージョンやチャプターが無い場合は「その他」を選択して手入力してください',
+    invited_by: '紹介者', invited_by_hint: 'お知り合いから紹介された方は氏名を',
+    notes: '備考', notes_hint: 'アレルギー・配慮事項などあればご記入ください',
+    party_label: '7/7 当日懇親会に参加する', party_hint: '19:00–21:00 同会場にて開催 / 別途15,000円（事前決済）',
+    sec_events: '参加イベント',
+    event_expo_label: '7/7 展示会に参加する',
+    event_expo_hint: '10:00–18:00 ラグナガーデンホテル ／ 参加無料（必須）',
+    event_eve_label: '7/6 前夜祭に参加する',
+    event_eve_hint: '18:00–20:00 同会場にて開催 ／ 別途15,000円（事前決済）',
+    step_basic: 'STEP 1', step_ticket: 'STEP 2', step_bni: 'STEP 3',
+    step_events: 'STEP 4', step_other: 'STEP 5', step_confirm: 'STEP 6',
+    privacy_label: '<a href="privacy.html" target="_blank" rel="noopener">プライバシーポリシー</a>に同意します',
+    submit: 'この内容で申し込む', submitting: '送信中...',
+    req: '※ は必須項目です',
+    success_title: 'お申込み完了', success_lead: 'ご登録ありがとうございました。',
+    pid_label: 'PARTICIPANT ID',
+    save_hint: 'このQRコードを<strong>スクリーンショット保存</strong>し、当日受付でご提示ください。<br>QRが無い場合は participant_id を口頭でお伝えいただいても受付可能です。<br><br>ご不明な点は <a href="https://line.me/R/ti/p/@744geuzz" target="_blank" rel="noopener" style="color:var(--ai);font-weight:700;">BFO公式LINE</a> へお問い合わせください。',
+    party_cta_label: '当日懇親会の事前決済（EventPay）',
+    party_cta_btn: '💳 決済はこちら',
+    party_cta_btn_optional: '懇親会に参加する場合はこちら →',
+    party_cta_note: '本サイトでの申込み（このQRコード）は<strong>当日のチェックインに必須</strong>です。<br>EventPay での決済はそれとは別に必要となります。',
+    party_cta_note_optional: '当日「やっぱり懇親会も…」となった場合も、こちらから事前決済が可能です（席の空きがある場合のみ）。',
+    party_cta_steps_label: 'EventPay での選択手順：',
+    party_cta_steps: [
+      '「イベント参加（参加費 0円）」を <span style="white-space:nowrap"><strong>1名分</strong>選択</span>',
+      '「懇親会参加（15,000円）」を <span style="white-space:nowrap"><strong>1名分</strong>選択</span>',
+      '「この内容でお申込み」をタップして決済へ進む',
+    ],
+    eve_cta_label: '前夜祭の事前決済（EventPay）',
+    eve_cta_btn: '💳 前夜祭の決済はこちら',
+    eve_cta_btn_optional: '7/6 前夜祭に参加する場合はこちら →',
+    eve_cta_pending: '前夜祭の決済リンクは準備中です。確定し次第ご案内します。',
+    eve_cta_date: '🌙 7/6（月）前夜祭',
+    party_cta_date: '🍻 7/7（火）当日懇親会',
+    pay_warning: 'まだ事前決済は完了していません',
+    pay_label: '事前決済（EventPay）',
+    pay_lead: '下記イベントの事前決済をお願いします（EventPayの1ページでまとめて決済できます）：',
+    pay_eve_line: '🌙 7/6（月）前夜祭 ・ 15,000円',
+    pay_party_line: '🍻 7/7（火）当日懇親会 ・ 15,000円',
+    pay_btn: '💳 決済はこちら',
+    pay_btn_optional: '前夜祭・懇親会に参加する場合はこちら →',
+    pay_pending: '決済リンクは準備中です。確定し次第ご案内します。',
+    pay_optional_note: '当日「やっぱり参加したい」となった場合も、こちらから事前決済が可能です。',
+    pay_steps_label: 'EventPay での手順：',
+    pay_steps: [
+      '参加するイベント（前夜祭／懇親会）を選択',
+      '人数を選び「この内容でお申込み」から決済へ進む',
+    ],
+    err_required: '必須項目を入力してください',
+    err_network: '通信エラーが発生しました。もう一度お試しください。',
+  },
+  en: {
+    h_title: 'Pre-Registration', h_sub: 'Business Fusion Okinawa 2026',
+    back: '← Back to Home',
+    sec_basic: 'Basic Info', sec_ticket: 'Ticket Type', sec_bni: 'BNI Affiliation', sec_other: 'Other', sec_party: 'Reception',
+    last_name: 'Last Name', first_name: 'First Name', display_name: 'Display Name', display_hint: 'Printed on your badge. Auto-fills from last+first if empty.',
+    company_name: 'Company / Business Name', company_hint: 'Sole proprietors: enter your trade name or full name.',
+    business_type: 'Industry / Business Type', business_type_hint: 'Please select the industry that best fits',
+    business_type_select: '— Please select —',
+    business_type_options: [
+      'IT / Information & Communications',
+      'Manufacturing',
+      'Construction / Architecture',
+      'Real Estate',
+      'Food & Beverage / Hospitality',
+      'Retail / Distribution',
+      'Wholesale',
+      'Finance / Insurance',
+      'Healthcare / Welfare / Nursing',
+      'Beauty / Wellness',
+      'Education',
+      'Legal & Professional Services (Lawyers, CPAs, etc.)',
+      'Consulting',
+      'Advertising / Marketing',
+      'Media / Publishing / Printing',
+      'Transport / Logistics',
+      'Agriculture / Fishery',
+      'Tourism / Leisure',
+      'Energy / Public Sector',
+      'Other Services',
+      'Other',
+    ],
+    email: 'Email', email_hint: 'After registration, your participant ID and QR code will be sent to this email (send-only address).',
+    ticket_member: 'BNI Member', ticket_general: 'General', ticket_invite: 'Invited', ticket_other: 'Other',
+    region: 'Region', region_select: 'Please select', region_hint: 'BNI Members only',
+    chapter: 'Chapter', chapter_select: 'Select region first', chapter_none: '(N/A)',
+    region_other_option: '— Other (not in the list) —',
+    chapter_other_option: '— Other (not in the list) —',
+    region_other_label: 'Enter region name',
+    chapter_other_label: 'Enter chapter name',
+    region_other_placeholder: 'e.g. Okinawa / Kansai / Overseas chapter',
+    chapter_other_placeholder: 'Enter your chapter name',
+    bni_other_hint: '※ If your region or chapter is not in the list, please select "Other" and enter it manually',
+    invited_by: 'Invited by', invited_by_hint: 'Name of the person who invited you',
+    notes: 'Notes', notes_hint: 'Allergies or special needs',
+    party_label: 'Join the 7/7 Same-day Reception', party_hint: '19:00–21:00 same venue / additional 15,000 JPY (prepayment)',
+    sec_events: 'Events',
+    event_expo_label: 'Attend the 7/7 Expo',
+    event_expo_hint: '10:00–18:00 Laguna Garden Hotel / Free (required)',
+    event_eve_label: 'Attend the 7/6 Eve Party',
+    event_eve_hint: '18:00–20:00 same venue / additional 15,000 JPY (prepayment)',
+    step_basic: 'STEP 1', step_ticket: 'STEP 2', step_bni: 'STEP 3',
+    step_events: 'STEP 4', step_other: 'STEP 5', step_confirm: 'STEP 6',
+    privacy_label: 'I agree to the <a href="privacy.html" target="_blank" rel="noopener">privacy policy</a>',
+    submit: 'Submit registration', submitting: 'Submitting...',
+    req: '※ marked fields are required',
+    success_title: 'Registration Complete', success_lead: 'Thank you for registering.',
+    pid_label: 'PARTICIPANT ID',
+    save_hint: '<strong>Save a screenshot</strong> of this QR and show it at the reception. You can also tell us your participant_id verbally.<br><br>Questions? Contact us via <a href="https://line.me/R/ti/p/@744geuzz" target="_blank" rel="noopener" style="color:var(--ai);font-weight:700;">BFO Official LINE</a>.',
+    party_cta_label: 'Reception Prepayment (via EventPay)',
+    party_cta_btn: '💳 Pay Reception Fee',
+    party_cta_btn_optional: 'Want to join the reception? Pay here →',
+    party_cta_note: 'Your registration here (the QR above) is <strong>required for on-site check-in</strong>.<br>Payment on EventPay is a separate step for the reception fee only.',
+    party_cta_note_optional: 'Changed your mind? You can still pre-pay for the reception here (subject to availability).',
+    party_cta_steps_label: 'On the EventPay page:',
+    party_cta_steps: [
+      'Choose <span style="white-space:nowrap"><strong>1 person</strong></span> for "Event participation (free)"',
+      'Choose <span style="white-space:nowrap"><strong>1 person</strong></span> for "Reception (¥15,000)"',
+      'Tap "Apply with this content" to proceed to payment',
+    ],
+    eve_cta_label: 'Eve Party Prepayment (via EventPay)',
+    eve_cta_btn: '💳 Pay for the Eve Party',
+    eve_cta_btn_optional: 'Join the 7/6 Eve Party? Pay here →',
+    eve_cta_pending: 'The Eve Party payment link is being prepared. We will announce it soon.',
+    eve_cta_date: '🌙 Jul 6 (Mon) · Eve Party',
+    party_cta_date: '🍻 Jul 7 (Tue) Same-day Reception',
+    pay_warning: 'Your payment is NOT complete yet',
+    pay_label: 'Prepayment (via EventPay)',
+    pay_lead: 'Please complete prepayment for the following (both can be paid on one EventPay page):',
+    pay_eve_line: '🌙 Jul 6 (Mon) Eve Party · ¥15,000',
+    pay_party_line: '🍻 Jul 7 (Tue) Same-day Reception · ¥15,000',
+    pay_btn: '💳 Proceed to Payment',
+    pay_btn_optional: 'Want to join the Eve Party / Reception? Pay here →',
+    pay_pending: 'The payment link is being prepared. We will announce it soon.',
+    pay_optional_note: 'Changed your mind? You can still prepay here.',
+    pay_steps_label: 'On the EventPay page:',
+    pay_steps: [
+      'Select the events you want (Eve Party / Reception)',
+      'Choose the number of people and tap "Apply with this content" to pay',
+    ],
+    err_required: 'Please fill in required fields',
+    err_network: 'Network error. Please try again.',
+  },
+  zh: {
+    h_title: '事前報名', h_sub: 'Business Fusion Okinawa 2026',
+    back: '← 返回首頁',
+    sec_basic: '基本資料', sec_ticket: '參加類別', sec_bni: 'BNI 所屬', sec_other: '其他', sec_party: '聯誼酒會',
+    last_name: '姓', first_name: '名', display_name: '顯示名稱', display_hint: '將印在名牌上。空白時自動設為 姓+名',
+    company_name: '公司・商號名稱', company_hint: '個人事業者請填入商號或姓名',
+    business_type: '行業・業種', business_type_hint: '請選擇符合的行業',
+    business_type_select: '— 請選擇 —',
+    business_type_options: [
+      'IT・資訊通信',
+      '製造業',
+      '建設・建築',
+      '不動產',
+      '餐飲・住宿',
+      '零售・流通',
+      '批發',
+      '金融・保險',
+      '醫療・福祉・看護',
+      '美容・健康',
+      '教育・學習支援',
+      '專業士業（律師・會計師・代書等）',
+      '顧問諮詢',
+      '廣告・行銷',
+      '媒體・出版・印刷',
+      '運輸・物流',
+      '農林漁業',
+      '觀光・休閒',
+      '能源・公共部門',
+      '其他服務業',
+      '其他',
+    ],
+    email: '電子郵件', email_hint: '報名完成後，將會把參加者ID與QR碼寄送至此信箱（僅供寄送，無法回覆）。',
+    ticket_member: 'BNI會員', ticket_general: '一般', ticket_invite: '邀請', ticket_other: '其他',
+    region: '區域', region_select: '請選擇', region_hint: '僅限 BNI 會員',
+    chapter: '分會', chapter_select: '請先選擇區域', chapter_none: '（不適用）',
+    region_other_option: '— 其他（不在清單中）—',
+    chapter_other_option: '— 其他（不在清單中）—',
+    region_other_label: '輸入區域名稱',
+    chapter_other_label: '輸入分會名稱',
+    region_other_placeholder: '例：沖繩 / 關西 / 海外分會 等',
+    chapter_other_placeholder: '請輸入所屬分會名稱',
+    bni_other_hint: '※ 若您的區域或分會不在清單中，請選擇「其他」並手動輸入',
+    invited_by: '邀請人', invited_by_hint: '邀請您的人的姓名',
+    notes: '備註', notes_hint: '過敏或特殊需求',
+    party_label: '參加 7/7 當日聯誼酒會', party_hint: '19:00–21:00 同會場 / 另外15,000日圓（事前付款）',
+    sec_events: '參加活動',
+    event_expo_label: '參加 7/7 展示會',
+    event_expo_hint: '10:00–18:00 Laguna Garden Hotel ／ 免費（必須）',
+    event_eve_label: '參加 7/6 前夜祭',
+    event_eve_hint: '18:00–20:00 同會場 ／ 另外15,000日圓（事前付款）',
+    step_basic: 'STEP 1', step_ticket: 'STEP 2', step_bni: 'STEP 3',
+    step_events: 'STEP 4', step_other: 'STEP 5', step_confirm: 'STEP 6',
+    privacy_label: '我同意 <a href="privacy.html" target="_blank" rel="noopener">隱私政策</a>',
+    submit: '送出報名', submitting: '送出中...',
+    req: '※ 為必填項目',
+    success_title: '報名完成', success_lead: '感謝您的報名。',
+    pid_label: 'PARTICIPANT ID',
+    save_hint: '請<strong>截圖保存</strong>此 QR 碼，並於當日報到時出示。也可口頭告知 participant_id。<br><br>如有疑問，請透過 <a href="https://line.me/R/ti/p/@744geuzz" target="_blank" rel="noopener" style="color:var(--ai);font-weight:700;">BFO 官方 LINE</a> 聯絡我們。',
+    party_cta_label: '當日聯誼酒會事前付款（EventPay）',
+    party_cta_btn: '💳 立即付款',
+    party_cta_btn_optional: '想要參加聯誼酒會？由此付款 →',
+    party_cta_note: '本網站申請後產生的QR碼<strong>為當日報到必須</strong>。<br>EventPay 上的付款是另外的步驟，僅用於聯誼酒會費用。',
+    party_cta_note_optional: '若臨時改變主意想參加聯誼酒會，亦可由此事前付款（視座位狀況而定）。',
+    party_cta_steps_label: '於 EventPay 頁面操作：',
+    party_cta_steps: [
+      '「活動參加（免費）」選擇 <span style="white-space:nowrap"><strong>1 名</strong></span>',
+      '「聯誼酒會（15,000日圓）」選擇 <span style="white-space:nowrap"><strong>1 名</strong></span>',
+      '點擊「以此內容報名」進入付款流程',
+    ],
+    eve_cta_label: '前夜祭事前付款（EventPay）',
+    eve_cta_btn: '💳 前夜祭付款由此',
+    eve_cta_btn_optional: '想參加 7/6 前夜祭？由此付款 →',
+    eve_cta_pending: '前夜祭的付款連結準備中，確定後將另行通知。',
+    eve_cta_date: '🌙 7/6（一）前夜祭',
+    party_cta_date: '🍻 7/7（二）當日聯誼酒會',
+    pay_warning: '尚未完成事前付款',
+    pay_label: '事前付款（EventPay）',
+    pay_lead: '請完成以下項目的事前付款（可在 EventPay 同一頁面一次付清）：',
+    pay_eve_line: '🌙 7/6（一）前夜祭 ・ 15,000日圓',
+    pay_party_line: '🍻 7/7（二）當日聯誼酒會 ・ 15,000日圓',
+    pay_btn: '💳 前往付款',
+    pay_btn_optional: '想參加前夜祭／聯誼酒會？由此付款 →',
+    pay_pending: '付款連結準備中，確定後將另行通知。',
+    pay_optional_note: '若臨時改變主意想參加，亦可由此事前付款。',
+    pay_steps_label: '於 EventPay 頁面操作：',
+    pay_steps: [
+      '選擇想參加的活動（前夜祭／聯誼酒會）',
+      '選擇人數並點擊「以此內容報名」進入付款',
+    ],
+    err_required: '請填寫必填項目',
+    err_network: '通訊錯誤，請再試一次。',
+  },
+  ko: {
+    h_title: '사전 신청', h_sub: 'Business Fusion Okinawa 2026',
+    back: '← 홈으로',
+    sec_basic: '기본 정보', sec_ticket: '참가 구분', sec_bni: 'BNI 소속', sec_other: '기타', sec_party: '친목회',
+    last_name: '성', first_name: '이름', display_name: '표시명', display_hint: '명찰에 인쇄됩니다. 비워두면 성+이름으로 자동 설정',
+    company_name: '회사명・상호명', company_hint: '개인사업자는 상호명 또는 성함을 입력해 주세요',
+    business_type: '업종', business_type_hint: '해당하는 업종을 선택해 주세요',
+    business_type_select: '— 선택해 주세요 —',
+    business_type_options: [
+      'IT・정보통신',
+      '제조업',
+      '건설・건축',
+      '부동산',
+      '음식・숙박',
+      '소매・유통',
+      '도매',
+      '금융・보험',
+      '의료・복지・간호',
+      '미용・건강',
+      '교육・학습지원',
+      '전문직(변호사・세무사・행정사 등)',
+      '컨설팅',
+      '광고・마케팅',
+      '미디어・출판・인쇄',
+      '운송・물류',
+      '농림수산',
+      '관광・레저',
+      '에너지・공공',
+      '기타 서비스업',
+      '기타',
+    ],
+    email: '이메일', email_hint: '신청 완료 후 참가자 ID와 QR 코드를 이 이메일로 보내드립니다(발신 전용 주소).',
+    ticket_member: 'BNI 멤버', ticket_general: '일반', ticket_invite: '초대', ticket_other: '기타',
+    region: '리전', region_select: '선택해 주세요', region_hint: 'BNI 멤버만',
+    chapter: '챕터', chapter_select: '먼저 리전을 선택', chapter_none: '（해당 없음）',
+    region_other_option: '— 기타（목록에 없는 경우）—',
+    chapter_other_option: '— 기타（목록에 없는 경우）—',
+    region_other_label: '리전명을 입력',
+    chapter_other_label: '챕터명을 입력',
+    region_other_placeholder: '예：오키나와 / 칸사이 / 해외 챕터 등',
+    chapter_other_placeholder: '소속 챕터명을 입력해 주세요',
+    bni_other_hint: '※ 리스트에 리전이나 챕터가 없는 경우 「기타」를 선택 후 직접 입력해 주세요',
+    invited_by: '추천자', invited_by_hint: '추천해 주신 분의 성함',
+    notes: '비고', notes_hint: '알레르기나 특별 요청사항',
+    party_label: '7/7 당일 친목회 참가', party_hint: '19:00–21:00 동일 회장 / 별도 15,000엔 (사전 결제)',
+    sec_events: '참가 이벤트',
+    event_expo_label: '7/7 전시회에 참가',
+    event_expo_hint: '10:00–18:00 라구나 가든 호텔 / 무료(필수)',
+    event_eve_label: '7/6 전야제에 참가',
+    event_eve_hint: '18:00–20:00 동일 회장 / 별도 15,000엔 (사전 결제)',
+    step_basic: 'STEP 1', step_ticket: 'STEP 2', step_bni: 'STEP 3',
+    step_events: 'STEP 4', step_other: 'STEP 5', step_confirm: 'STEP 6',
+    privacy_label: '<a href="privacy.html" target="_blank" rel="noopener">개인정보 처리방침</a>에 동의합니다',
+    submit: '이 내용으로 신청', submitting: '전송 중...',
+    req: '※ 표시는 필수 항목',
+    success_title: '신청 완료', success_lead: '신청해 주셔서 감사합니다.',
+    pid_label: 'PARTICIPANT ID',
+    save_hint: '이 QR 코드를 <strong>스크린샷으로 저장</strong>하시고 당일 접수처에서 보여주세요. participant_id를 구두로 알려주셔도 됩니다.<br><br>문의 사항은 <a href="https://line.me/R/ti/p/@744geuzz" target="_blank" rel="noopener" style="color:var(--ai);font-weight:700;">BFO 공식 LINE</a> 으로 연락해 주세요.',
+    party_cta_label: '당일 친목회 사전 결제（EventPay）',
+    party_cta_btn: '💳 결제하기',
+    party_cta_btn_optional: '친목회 참가를 원하시면 여기서 결제 →',
+    party_cta_note: '본 사이트에서 발급된 QR 코드는 <strong>당일 체크인에 필수</strong>입니다.<br>EventPay 결제는 그와는 별도의 절차로, 친목회 비용 결제용입니다.',
+    party_cta_note_optional: '마음이 바뀌어 친목회에 참가하고 싶으시면 여기서 사전 결제가 가능합니다(좌석 여유가 있는 경우).',
+    party_cta_steps_label: 'EventPay 페이지에서의 선택 순서：',
+    party_cta_steps: [
+      '「이벤트 참가（무료）」를 <span style="white-space:nowrap"><strong>1명</strong> 선택</span>',
+      '「친목회 참가（15,000엔）」를 <span style="white-space:nowrap"><strong>1명</strong> 선택</span>',
+      '「이 내용으로 신청」을 탭하여 결제 화면으로 이동',
+    ],
+    eve_cta_label: '전야제 사전 결제（EventPay）',
+    eve_cta_btn: '💳 전야제 결제하기',
+    eve_cta_btn_optional: '7/6 전야제 참가를 원하시면 여기서 결제 →',
+    eve_cta_pending: '전야제 결제 링크는 준비 중입니다. 확정되는 대로 안내드립니다.',
+    eve_cta_date: '🌙 7/6(월) 전야제',
+    party_cta_date: '🍻 7/7(화) 당일 친목회',
+    pay_warning: '아직 사전 결제가 완료되지 않았습니다',
+    pay_label: '사전 결제（EventPay）',
+    pay_lead: '아래 이벤트의 사전 결제를 부탁드립니다(EventPay 한 페이지에서 함께 결제 가능):',
+    pay_eve_line: '🌙 7/6(월) 전야제 · 15,000엔',
+    pay_party_line: '🍻 7/7(화) 당일 친목회 · 15,000엔',
+    pay_btn: '💳 결제하러 가기',
+    pay_btn_optional: '전야제・친목회 참가를 원하시면 여기서 결제 →',
+    pay_pending: '결제 링크는 준비 중입니다. 확정되는 대로 안내드립니다.',
+    pay_optional_note: '마음이 바뀌어 참가하고 싶으시면 여기서 사전 결제가 가능합니다.',
+    pay_steps_label: 'EventPay 페이지에서의 순서：',
+    pay_steps: [
+      '참가할 이벤트(전야제／친목회)를 선택',
+      '인원을 선택하고 「이 내용으로 신청」으로 결제 진행',
+    ],
+    err_required: '필수 항목을 입력해 주세요',
+    err_network: '통신 오류가 발생했습니다. 다시 시도해 주세요.',
+  },
+};
+
+/* ─────────────────────────────────────────────────────────────
+   状態
+─────────────────────────────────────────────────────────────── */
+let state = {
+  lang: localStorage.getItem('bfo2026_lang') || 'ja',
+  chapters: null, // {regions: [{name, chapters: []}]}
+  submitting: false,
+  result: null,
+  partyUrl: '',
+  partyLabel: '',  // 懇親会決済名（スプレッドシートで設定可能、空ならデフォルト文言）
+  partyRegistered: false, // 申込時の懇親会チェック状態（完了画面の表示プロミネンス制御に使用）
+  evePartyUrl: '',
+  evePartyLabel: '',  // 前夜祭決済名（スプレッドシートで設定可能）
+  evePartyRegistered: false, // 申込時の前夜祭チェック状態
+};
+
+const t = () => I18N[state.lang] || I18N.ja;
+
+/* ─────────────────────────────────────────────────────────────
+   初期化
+─────────────────────────────────────────────────────────────── */
+async function init() {
+  renderLangSwitcher();
+  applyLang();
+  renderForm();
+  await loadChapters();
+}
+
+function renderLangSwitcher() {
+  const el = document.getElementById('lang-switcher');
+  el.innerHTML = '';
+  [['ja','日本語'],['en','EN'],['zh','繁中'],['ko','한국']].forEach(([code,label]) => {
+    const b = document.createElement('button');
+    b.textContent = label;
+    if (state.lang === code) b.classList.add('active');
+    b.onclick = () => switchLang(code);
+    el.appendChild(b);
+  });
+}
+
+// 言語切替（フォーム入力値を保持してシームレスに再描画）
+function switchLang(code) {
+  if (state.lang === code) return;
+  // 入力値を退避
+  const prevValues = captureFormValues();
+  state.lang = code;
+  localStorage.setItem('bfo2026_lang', code);
+  document.documentElement.lang = code;
+
+  // フェードトランジション
+  const area = document.getElementById('form-area');
+  if (area) area.style.transition = 'opacity .15s';
+  if (area) area.style.opacity = '0.4';
+
+  setTimeout(() => {
+    renderLangSwitcher();
+    applyLang();
+    if (state.result) {
+      renderSuccess();
+    } else {
+      renderForm();
+      restoreFormValues(prevValues);
+    }
+    if (area) {
+      area.style.opacity = '1';
+      // transition解除（レイアウトの再アニメーションを防止）
+      setTimeout(() => { area.style.transition = ''; }, 200);
+    }
+  }, 80);
+}
+
+// フォームの全入力値を {name: value} で取得
+function captureFormValues() {
+  const out = {};
+  const f = document.getElementById('reg-form');
+  if (!f) return out;
+  Array.from(f.elements).forEach(el => {
+    if (!el.name) return;
+    if (el.type === 'checkbox' || el.type === 'radio') {
+      if (el.checked) out[el.name] = el.value;
+    } else {
+      out[el.name] = el.value;
+    }
+  });
+  return out;
+}
+
+// 取得済み入力値をフォームへ復元
+function restoreFormValues(values) {
+  if (!values) return;
+  const f = document.getElementById('reg-form');
+  if (!f) return;
+  Object.keys(values).forEach(name => {
+    // RadioNodeList（同名 radio 群）の場合は f.elements[name] が NodeList になる
+    const elOrList = f.elements[name];
+    if (!elOrList) return;
+    const isRadioGroup = (elOrList instanceof RadioNodeList);
+    if (isRadioGroup) {
+      // ticket_type のような radio グループ
+      Array.from(elOrList).forEach(r => { r.checked = (r.value === values[name]); });
+      // ticket_type 変更は BNI 所属セクションの表示制御に必要
+      if (name === 'ticket_type') {
+        const checked = Array.from(elOrList).find(r => r.checked);
+        if (checked) checked.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+      return;
+    }
+    const el = elOrList;
+    if (el.type === 'checkbox' || el.type === 'radio') {
+      el.checked = (el.value === values[name]);
+    } else {
+      el.value = values[name];
+    }
+    // bni_region変更時は dependent な bni_chapter を再構築
+    if (name === 'bni_region') {
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  });
+  // チャプターは region 再描画後に復元
+  if (values.bni_chapter) {
+    setTimeout(() => {
+      const chSel = f.elements['bni_chapter'];
+      if (chSel) {
+        chSel.value = values.bni_chapter;
+        chSel.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    }, 0);
+  }
+  // 「その他」手入力欄の復元
+  if (values.bni_region_other) {
+    setTimeout(() => {
+      const el = f.elements['bni_region_other'];
+      if (el) el.value = values.bni_region_other;
+    }, 0);
+  }
+  if (values.bni_chapter_other) {
+    setTimeout(() => {
+      const el = f.elements['bni_chapter_other'];
+      if (el) el.value = values.bni_chapter_other;
+    }, 0);
+  }
+}
+
+function applyLang() {
+  document.documentElement.lang = state.lang;
+  document.getElementById('h-title').textContent = t().h_title;
+  document.getElementById('h-sub').textContent = t().h_sub;
+  document.getElementById('back-link').textContent = t().back;
+}
+
+async function loadChapters() {
+  if (!CONFIG.WEB_APP_URL || CONFIG.WEB_APP_URL === 'PASTE_HERE_AFTER_DEPLOY') return;
+  try {
+    const r = await fetch(`${CONFIG.WEB_APP_URL}?action=chapters`);
+    const j = await r.json();
+    if (j.ok) { state.chapters = j; renderForm(); }
+  } catch (_) { /* graceful: dropdowns stay empty, user can still submit other ticket types */ }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   フォーム描画
+─────────────────────────────────────────────────────────────── */
+function renderForm() {
+  const area = document.getElementById('form-area');
+  const T = t();
+  const regions = (state.chapters && state.chapters.regions) || [];
+
+  area.innerHTML = `
+    <div class="req-note">${T.req}</div>
+
+    <form id="reg-form" novalidate>
+
+      <div class="card">
+        <div class="card-title"><span class="step-badge">${T.step_basic}</span> ${T.sec_basic}</div>
+        <div class="row-2">
+          <div class="field">
+            <label class="label" for="last_name">${T.last_name}<span class="req">※</span></label>
+            <input type="text" id="last_name" name="last_name" required autocomplete="family-name" />
+          </div>
+          <div class="field">
+            <label class="label" for="first_name">${T.first_name}<span class="req">※</span></label>
+            <input type="text" id="first_name" name="first_name" required autocomplete="given-name" />
+          </div>
+        </div>
+        <div class="field">
+          <label class="label" for="display_name">${T.display_name}<span class="opt">(任意)</span></label>
+          <input type="text" id="display_name" name="display_name" autocomplete="nickname" />
+          <div class="hint">${T.display_hint}</div>
+        </div>
+        <div class="field">
+          <label class="label" for="company_name">${T.company_name}<span class="req">※</span></label>
+          <input type="text" id="company_name" name="company_name" required autocomplete="organization" />
+          <div class="hint">${T.company_hint}</div>
+        </div>
+        <div class="field">
+          <label class="label" for="business_type">${T.business_type}<span class="req">※</span></label>
+          <select id="business_type" name="business_type" required>
+            <option value="">${T.business_type_select}</option>
+            ${(T.business_type_options || []).map(opt => `<option value="${escapeHtml(opt)}">${escapeHtml(opt)}</option>`).join('')}
+          </select>
+          <div class="hint">${T.business_type_hint}</div>
+        </div>
+        <div class="field">
+          <label class="label" for="email">${T.email}<span class="req">※</span></label>
+          <input type="email" id="email" name="email" required autocomplete="email" />
+          <div class="hint">${T.email_hint}</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="step-badge">${T.step_ticket}</span> ${T.sec_ticket}</div>
+        <div class="radio-grid">
+          ${[
+            ['BNIメンバー', T.ticket_member],
+            ['一般', T.ticket_general],
+            ['招待', T.ticket_invite],
+            ['その他', T.ticket_other],
+          ].map(([val, label], i) => `
+            <label class="radio-cell">
+              <input type="radio" name="ticket_type" value="${val}" ${i===0?'checked':''} />
+              ${label}
+            </label>
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="card" id="bni-section" style="display: none;">
+        <div class="card-title"><span class="step-badge">${T.step_bni}</span> ${T.sec_bni}</div>
+        <div class="hint" style="margin: 0 0 14px; padding: 10px 12px; background: var(--bg); border-left: 3px solid var(--ai); color: var(--fg);">
+          ${T.bni_other_hint || ''}
+        </div>
+        <div class="field">
+          <label class="label" for="bni_region">${T.region}<span class="opt">(任意)</span></label>
+          <select id="bni_region" name="bni_region">
+            <option value="">${T.region_select}</option>
+            ${regions.map(r => `<option value="${escapeHtml(r.name)}">${escapeHtml(r.name)}</option>`).join('')}
+            <option value="__other__">${T.region_other_option || 'その他'}</option>
+          </select>
+          <div class="hint">${T.region_hint}</div>
+        </div>
+        <div class="field" id="bni_region_other_wrap" style="display: none;">
+          <label class="label" for="bni_region_other">${T.region_other_label || 'その他（手入力）'}</label>
+          <input type="text" id="bni_region_other" name="bni_region_other"
+                 placeholder="${T.region_other_placeholder || ''}" autocomplete="off" />
+        </div>
+        <div class="field">
+          <label class="label" for="bni_chapter">${T.chapter}<span class="opt">(任意)</span></label>
+          <select id="bni_chapter" name="bni_chapter" disabled>
+            <option value="">${T.chapter_select}</option>
+          </select>
+        </div>
+        <div class="field" id="bni_chapter_other_wrap" style="display: none;">
+          <label class="label" for="bni_chapter_other">${T.chapter_other_label || 'その他（手入力）'}</label>
+          <input type="text" id="bni_chapter_other" name="bni_chapter_other"
+                 placeholder="${T.chapter_other_placeholder || ''}" autocomplete="off" />
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="step-badge">${T.step_other}</span> ${T.sec_other}</div>
+        <div class="field">
+          <label class="label" for="invited_by">${T.invited_by}<span class="opt">(任意)</span></label>
+          <input type="text" id="invited_by" name="invited_by" />
+          <div class="hint">${T.invited_by_hint}</div>
+        </div>
+        <div class="field">
+          <label class="label" for="notes">${T.notes}<span class="opt">(任意)</span></label>
+          <textarea id="notes" name="notes" rows="3"></textarea>
+          <div class="hint">${T.notes_hint}</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">${T.step_events ? `<span class="step-badge">${T.step_events}</span> ` : ''}${T.sec_events}</div>
+
+        <!-- 7/7 展示会：必須・固定ON -->
+        <label class="checkbox-row" style="opacity: 1; cursor: default; border-color: var(--midori);">
+          <input type="checkbox" id="expo_registered" name="expo_registered" checked disabled />
+          <div class="ck-text">
+            <strong>${T.event_expo_label}</strong>
+            <small>${T.event_expo_hint}</small>
+          </div>
+        </label>
+
+        <!-- 7/6 前夜祭：任意 -->
+        <label class="checkbox-row" style="margin-top: 10px;">
+          <input type="checkbox" id="eve_party_registered" name="eve_party_registered" />
+          <div class="ck-text">
+            <strong>${T.event_eve_label}</strong>
+            <small>${T.event_eve_hint}</small>
+          </div>
+        </label>
+
+        <!-- 7/7 展示会後の懇親会：任意 -->
+        <label class="checkbox-row" style="margin-top: 10px;">
+          <input type="checkbox" id="party_registered" name="party_registered" />
+          <div class="ck-text">
+            <strong>${T.party_label}</strong>
+            <small>${T.party_hint}</small>
+          </div>
+        </label>
+      </div>
+
+      <div class="card" style="background: var(--bg);">
+        <label class="checkbox-row" style="border: none; box-shadow: none; padding: 0;">
+          <input type="checkbox" id="agree" name="agree" required />
+          <div class="ck-text" style="font-size: 13px;">${T.privacy_label}</div>
+        </label>
+      </div>
+
+      <div id="form-error"></div>
+
+      <button type="submit" class="submit" id="submit-btn">${T.submit}</button>
+    </form>
+  `;
+
+  // ─── BNI 所属セクションの表示制御 ───
+  // ticket_type === 'BNIメンバー' のときだけ表示
+  const bniSection = document.getElementById('bni-section');
+  const ticketRadios = document.querySelectorAll('input[name="ticket_type"]');
+  const syncBniSection = () => {
+    const checked = document.querySelector('input[name="ticket_type"]:checked');
+    const isMember = checked && checked.value === 'BNIメンバー';
+    bniSection.style.display = isMember ? '' : 'none';
+  };
+  ticketRadios.forEach(r => r.addEventListener('change', syncBniSection));
+  syncBniSection(); // 初期同期
+
+  // ─── region → chapter 依存ドロップダウン + 「その他」処理 ───
+  const regionSel = document.getElementById('bni_region');
+  const chapterSel = document.getElementById('bni_chapter');
+  const regionOtherWrap = document.getElementById('bni_region_other_wrap');
+  const chapterOtherWrap = document.getElementById('bni_chapter_other_wrap');
+  const regionOtherInput = document.getElementById('bni_region_other');
+  const chapterOtherInput = document.getElementById('bni_chapter_other');
+
+  const updateRegionOther = () => {
+    const isOther = regionSel.value === '__other__';
+    regionOtherWrap.style.display = isOther ? '' : 'none';
+    if (!isOther) regionOtherInput.value = '';
+  };
+  const updateChapterOther = () => {
+    const isOther = chapterSel.value === '__other__';
+    chapterOtherWrap.style.display = isOther ? '' : 'none';
+    if (!isOther) chapterOtherInput.value = '';
+  };
+
+  regionSel.addEventListener('change', () => {
+    const region = regionSel.value;
+    chapterSel.innerHTML = '';
+    // 「その他」を選んだ場合は依存ドロップダウンを無効化（手入力に誘導）
+    if (region === '__other__') {
+      chapterSel.disabled = false;
+      chapterSel.appendChild(opt('', T.chapter_select));
+      chapterSel.appendChild(opt('__other__', T.chapter_other_option || 'その他'));
+      chapterSel.value = '__other__';
+      updateRegionOther();
+      updateChapterOther();
+      return;
+    }
+    if (!region) {
+      chapterSel.disabled = true;
+      chapterSel.appendChild(opt('', T.chapter_select));
+      updateRegionOther();
+      updateChapterOther();
+      return;
+    }
+    const found = regions.find(r => r.name === region);
+    chapterSel.disabled = false;
+    chapterSel.appendChild(opt('', T.chapter_select));
+    (found ? found.chapters : []).forEach(c => chapterSel.appendChild(opt(c, c)));
+    chapterSel.appendChild(opt('__other__', T.chapter_other_option || 'その他'));
+    updateRegionOther();
+    updateChapterOther();
+  });
+  chapterSel.addEventListener('change', updateChapterOther);
+
+  document.getElementById('reg-form').addEventListener('submit', onSubmit);
+}
+
+function opt(value, label) {
+  const o = document.createElement('option');
+  o.value = value; o.textContent = label;
+  return o;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   送信
+─────────────────────────────────────────────────────────────── */
+async function onSubmit(e) {
+  e.preventDefault();
+  if (state.submitting) return;
+  const T = t();
+  const f = e.target;
+  const errEl = document.getElementById('form-error');
+  errEl.innerHTML = '';
+
+  // バリデーション
+  const last = f.last_name.value.trim();
+  const first = f.first_name.value.trim();
+  const companyName = f.company_name.value.trim();
+  const businessType = f.business_type.value.trim();
+  const email = f.email.value.trim();
+  const agree = f.agree.checked;
+  if (!last || !first || !companyName || !businessType || !email || !agree) {
+    errEl.innerHTML = `<div class="error-box">${T.err_required}</div>`;
+    return;
+  }
+
+  // BNI 所属：「その他」選択時は手入力欄の値を採用
+  const isMember = f.ticket_type.value === 'BNIメンバー';
+  let bniRegion = '';
+  let bniChapter = '';
+  if (isMember) {
+    const regionVal = f.bni_region.value;
+    const chapterVal = f.bni_chapter.value;
+    bniRegion = (regionVal === '__other__')
+      ? ((f.bni_region_other && f.bni_region_other.value.trim()) || '')
+      : regionVal;
+    bniChapter = (chapterVal === '__other__')
+      ? ((f.bni_chapter_other && f.bni_chapter_other.value.trim()) || '')
+      : chapterVal;
+  }
+
+  const payload = {
+    action: 'register',
+    last_name: last,
+    first_name: first,
+    display_name: f.display_name.value.trim(),
+    company_name: companyName,
+    business_type: businessType,
+    email: email,
+    ticket_type: f.ticket_type.value,
+    bni_region: bniRegion,
+    bni_chapter: bniChapter,
+    invited_by: f.invited_by.value.trim(),
+    notes: f.notes.value.trim(),
+    party_registered: f.party_registered.checked,
+    eve_party_registered: f.eve_party_registered.checked,
+  };
+
+  state.submitting = true;
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true; btn.textContent = T.submitting;
+
+  if (!CONFIG.WEB_APP_URL || CONFIG.WEB_APP_URL === 'PASTE_HERE_AFTER_DEPLOY') {
+    errEl.innerHTML = `<div class="error-box">⚠ Apps Script Web App URL が未設定です（register.html の CONFIG.WEB_APP_URL）</div>`;
+    state.submitting = false; btn.disabled = false; btn.textContent = T.submit;
+    return;
+  }
+
+  try {
+    const r = await fetch(CONFIG.WEB_APP_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // CORS preflight回避
+      body: JSON.stringify(payload),
+    });
+    const j = await r.json();
+    if (!j.ok) throw new Error(j.error || 'unknown');
+    state.result = j;
+    state.partyRegistered = !!payload.party_registered;
+    state.evePartyRegistered = !!payload.eve_party_registered;
+    // チェック有無に関わらず決済情報は取得しておく（完了画面で表示の強調度を変える）
+    const pay = await fetchEventPayments();
+    state.partyUrl = pay.partyUrl;
+    state.partyLabel = pay.partyLabel;
+    state.evePartyUrl = pay.evePartyUrl;
+    state.evePartyLabel = pay.evePartyLabel;
+    renderSuccess();
+  } catch (err) {
+    errEl.innerHTML = `<div class="error-box">${T.err_network} (${err.message || err})</div>`;
+    state.submitting = false; btn.disabled = false; btn.textContent = T.submit;
+  }
+}
+
+async function fetchEventPayments() {
+  // サイト設定／設定タブの懇親会・前夜祭の決済 URL とラベルを content エンドポイント経由で取得。
+  // apps-script.gs が settings.party_payment_url / party_payment_label /
+  // eve_party_payment_url / eve_party_payment_label を返却する。
+  // ※ register.html は const CONFIG = { ... }（ローカル定数）。window.CONFIG ではない点に注意。
+  const base = (typeof CONFIG !== 'undefined' && CONFIG.WEB_APP_URL) || '';
+  const empty = { partyUrl: '', partyLabel: '', evePartyUrl: '', evePartyLabel: '' };
+  if (!base || base === 'PASTE_HERE_AFTER_DEPLOY') {
+    console.warn('fetchEventPayments: WEB_APP_URL 未設定');
+    return empty;
+  }
+  try {
+    const r = await fetch(`${base}?action=content&lang=${encodeURIComponent(state.lang)}`);
+    if (!r.ok) {
+      console.warn('fetchEventPayments: HTTP', r.status);
+      return empty;
+    }
+    const json = await r.json();
+    const s = (json && json.settings) || {};
+    const out = {
+      partyUrl:      String(s.party_payment_url || ''),
+      partyLabel:    String(s.party_payment_label || ''),
+      evePartyUrl:   String(s.eve_party_payment_url || ''),
+      evePartyLabel: String(s.eve_party_payment_label || ''),
+    };
+    console.log('fetchEventPayments OK:', out);
+    return out;
+  } catch (e) {
+    console.warn('fetchEventPayments: 取得失敗', e);
+    return empty;
+  }
+}
+
+// 「後から参加する場合はこちら →」ボタン押下時に呼ばれる。
+// which: 'party'（当日懇親会）| 'eve_party'（前夜祭）
+// 参加者シートの該当イベントの参加列を '済' にマークし、後日のチェックイン・集計に反映。
+// EventPay の新タブはこの関数と並行で開く（preventDefault しない）。
+// fire-and-forget で送信し、ユーザーには遅延を感じさせない。
+function recordPartyIntent(pid, which) {
+  if (!pid) return;
+  const base = (typeof CONFIG !== 'undefined' && CONFIG.WEB_APP_URL) || '';
+  if (!base || base === 'PASTE_HERE_AFTER_DEPLOY') return;
+  try {
+    fetch(base, {
+      method: 'POST',
+      // Content-Type を付けない（Apps Script Web App の CORS 回避：simple request 扱いにする）
+      body: JSON.stringify({ action: 'mark_party_intent', participant_id: pid, which: which || 'party' }),
+      keepalive: true, // タブ離脱時も送信を継続
+    }).then(r => r.json()).then(j => {
+      console.log('mark_party_intent:', j);
+    }).catch(e => {
+      console.warn('mark_party_intent: 失敗', e);
+    });
+  } catch (e) {
+    console.warn('mark_party_intent: 例外', e);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   完了画面
+─────────────────────────────────────────────────────────────── */
+function renderSuccess() {
+  const T = t();
+  const area = document.getElementById('form-area');
+  const isMobile = window.innerWidth < 640;
+
+  // ── 事前決済セクション（前夜祭・当日懇親会を1つの EventPay リンクでまとめて決済）──
+  const pid = escapeHtml(state.result.participant_id);
+  const payUrl = state.partyUrl || state.evePartyUrl;   // 統合決済リンク
+  const selectedPaid = [];
+  if (state.evePartyRegistered) selectedPaid.push(T.pay_eve_line || '🌙 7/6 前夜祭');
+  if (state.partyRegistered)    selectedPaid.push(T.pay_party_line || '🍻 7/7 懇親会');
+  const anyPaid = selectedPaid.length > 0;
+
+  // 大きな「未決済」警告バナー（アニメーションで目立たせる）
+  const warningHtml = `
+    <div style="margin-top: 22px; padding: 16px 18px; background: var(--shu); color: #fff;
+      border: 2px solid var(--fg); box-shadow: 5px 5px 0 var(--fg);
+      font-weight: 900; font-size: 15px; line-height: 1.5; text-align: center; letter-spacing: 0.03em;
+      animation: warn-glow 1.5s ease-in-out infinite;">
+      <span style="display: inline-block; margin-right: 6px; animation: warn-icon 1.1s ease-in-out infinite;">⚠</span>${T.pay_warning}
+    </div>`;
+
+  const eventsListHtml = selectedPaid.map(e =>
+    `<li style="margin-bottom: 6px; font-weight: 700;">${e}</li>`).join('');
+
+  const stepsHtml = (T.pay_steps && T.pay_steps.length) ? `
+    <div style="background: rgba(255,255,255,0.6); padding: 12px 14px; border: 1px dashed var(--fg); margin-top: 12px;">
+      <div style="font-size: 12px; font-weight: 800; margin-bottom: 8px;">${T.pay_steps_label || ''}</div>
+      <ol style="margin: 0; padding-left: 20px; font-size: 12.5px; line-height: 1.8;">
+        ${T.pay_steps.map(s => `<li style="margin-bottom: 4px;">${s}</li>`).join('')}
+      </ol>
+    </div>` : '';
+
+  let paymentSectionHtml = '';
+  if (anyPaid) {
+    if (payUrl) {
+      paymentSectionHtml = `
+        <div class="party-cta" style="margin-top: 16px; padding: 20px; background: var(--ki); border: 2px solid var(--fg); box-shadow: 6px 6px 0 var(--fg); text-align: left;">
+          <strong style="font-size: 14px; display: block; margin-bottom: 10px;">${T.pay_label}</strong>
+          <div style="font-size: 12.5px; color: var(--fg); line-height: 1.7; margin-bottom: 10px;">${T.pay_lead || ''}</div>
+          <ul style="margin: 0 0 16px; padding-left: 20px; font-size: 13px; color: var(--fg);">${eventsListHtml}</ul>
+          <a href="${escapeHtml(payUrl)}" target="_blank" rel="noopener" style="
+            display: block; width: 100%; box-sizing: border-box;
+            background: var(--shu); color: var(--bg); border: 2px solid var(--fg);
+            padding: 20px 24px; text-decoration: none; font-weight: 900; font-size: 18px;
+            text-align: center; box-shadow: 6px 6px 0 var(--fg); animation: pay-pulse 1.8s ease-in-out infinite;
+          ">${T.pay_btn}</a>
+          ${stepsHtml}
+        </div>`;
+    } else {
+      // 決済リンク未設定 → 準備中
+      paymentSectionHtml = `
+        <div class="party-cta" style="margin-top: 16px; padding: 20px; background: var(--ki); border: 2px solid var(--fg); box-shadow: 6px 6px 0 var(--fg); text-align: left;">
+          <strong style="font-size: 14px; display: block; margin-bottom: 10px;">${T.pay_label}</strong>
+          <ul style="margin: 0 0 12px; padding-left: 20px; font-size: 13px; color: var(--fg);">${eventsListHtml}</ul>
+          <div style="font-size: 12.5px; color: var(--fg); line-height: 1.7;">${T.pay_pending || ''}</div>
+        </div>`;
+    }
+  } else if (payUrl) {
+    // 有料イベント未選択 → 後から参加する場合の補足導線
+    paymentSectionHtml = `
+      <div style="margin-top: 18px; padding: 16px 18px; background: var(--bg-soft); border: 1.5px dashed var(--fg);">
+        <div style="font-size: 12px; color: var(--fg-soft); line-height: 1.7; margin-bottom: 10px;">${T.pay_optional_note || ''}</div>
+        <a href="${escapeHtml(payUrl)}" target="_blank" rel="noopener"
+           onclick="recordPartyIntent('${pid}','party');recordPartyIntent('${pid}','eve_party')" style="
+          display: block; background: var(--ki); color: var(--fg); border: 1.5px solid var(--fg);
+          padding: 12px 20px; text-decoration: none; font-weight: 700; font-size: 13px;
+          box-shadow: 4px 4px 0 var(--fg);
+        ">${T.pay_btn_optional}</a>
+      </div>`;
+  }
+
+  area.innerHTML = `
+    <style>
+      @keyframes pay-pulse {
+        0%,100% { box-shadow: 6px 6px 0 var(--fg), 0 0 0 0 rgba(214,59,44,0.5); }
+        50%     { box-shadow: 6px 6px 0 var(--fg), 0 0 0 14px rgba(214,59,44,0); }
+      }
+      /* 未決済警告バナー：赤いハロー＋わずかな脈動で注意を引く */
+      @keyframes warn-glow {
+        0%,100% { box-shadow: 5px 5px 0 var(--fg), 0 0 0 0 rgba(214,59,44,0.55); transform: scale(1); }
+        50%     { box-shadow: 5px 5px 0 var(--fg), 0 0 0 13px rgba(214,59,44,0); transform: scale(1.015); }
+      }
+      /* 警告アイコン：点滅＋拡大で視線を集める */
+      @keyframes warn-icon {
+        0%,65%,100% { opacity: 1; transform: scale(1); }
+        82%         { opacity: 0.35; transform: scale(1.3); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        [style*="warn-glow"], [style*="warn-icon"] { animation: none !important; }
+      }
+    </style>
+    <div class="success">
+      <div class="check">✓</div>
+      <h2>${T.success_title}</h2>
+      <div style="color: var(--fg-soft); font-size: 14px;">${T.success_lead}</div>
+
+      ${anyPaid ? warningHtml : ''}
+
+      <div class="pid-label" style="margin-top: 22px;">${T.pid_label}</div>
+      <div class="pid">${escapeHtml(state.result.participant_id)}</div>
+      <div style="font-size: 14px; font-weight: 700; margin-top: 4px;">${escapeHtml(state.result.display_name || '')}</div>
+
+      <div style="display: flex; justify-content: center; margin: 24px 0;">
+        <div class="qr-wrap" id="qr-container"></div>
+      </div>
+
+      <div class="save-hint">${T.save_hint}</div>
+
+      ${paymentSectionHtml}
+    </div>
+  `;
+  // QR generate
+  setTimeout(() => {
+    const container = document.getElementById('qr-container');
+    if (container && window.QRCode) {
+      try {
+        container.innerHTML = ''; // clear placeholder
+        new QRCode(container, {
+          text: state.result.participant_id,
+          width: 220,
+          height: 220,
+          colorDark: '#1a1612',
+          colorLight: '#fbf6ec',
+          correctLevel: QRCode.CorrectLevel.H
+        });
+        // QRCode.js は <img> と <canvas> 両方を生成する。
+        // 表示の整合性のため <img> のみ残し、確実に中央寄せにする。
+        setTimeout(() => {
+          const img = container.querySelector('img');
+          if (img) {
+            container.innerHTML = '';
+            img.style.cssText = 'display:block;margin:0 auto;width:220px;height:220px;';
+            container.appendChild(img);
+          }
+        }, 60);
+      } catch (err) {
+        console.error('QR生成エラー:', err);
+        container.innerHTML = '<div style="color: var(--shu); font-weight: 700; text-align: center; padding: 20px;">⚠ QR コード生成に失敗しました<br><small style="font-size: 11px;">participant_id: ' + escapeHtml(state.result.participant_id) + '</small></div>';
+      }
+    }
+  }, 100);
+}
+
+function escapeHtml(s) {
+  return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+init();
+</script>
+</body>
+</html>

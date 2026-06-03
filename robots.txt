@@ -1,0 +1,37 @@
+# Business Fusion Okinawa 2026
+# robots.txt — クローラ指示（公開状態）
+
+User-agent: *
+Allow: /
+Disallow: /bfo77.html
+Disallow: /bfo77
+
+# AI 検索 / LLM クローラを明示的に許可（インデックス・引用OK）
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+Sitemap: https://bfo2026.search-mania.net/sitemap.xml
