@@ -202,6 +202,7 @@ const I18N = {
     step_basic: 'STEP 1', step_ticket: 'STEP 2', step_bni: 'STEP 3',
     step_events: 'STEP 4', step_other: 'STEP 5', step_confirm: 'STEP 6',
     privacy_label: '<a href="privacy.html" target="_blank" rel="noopener">プライバシーポリシー</a>に同意します',
+    cancel_policy_note: '※ キャンセルポリシー：2026年6月17日以降のキャンセルは参加費の100%を申し受けます。',
     submit: 'この内容で申し込む', submitting: '送信中...',
     req: '※ は必須項目です',
     success_title: 'お申込み完了', success_lead: 'ご登録ありがとうございました。',
@@ -294,6 +295,7 @@ const I18N = {
     step_basic: 'STEP 1', step_ticket: 'STEP 2', step_bni: 'STEP 3',
     step_events: 'STEP 4', step_other: 'STEP 5', step_confirm: 'STEP 6',
     privacy_label: 'I agree to the <a href="privacy.html" target="_blank" rel="noopener">privacy policy</a>',
+    cancel_policy_note: '* Cancellation policy: Cancellations on or after June 17, 2026 are subject to a 100% fee.',
     submit: 'Submit registration', submitting: 'Submitting...',
     req: '※ marked fields are required',
     success_title: 'Registration Complete', success_lead: 'Thank you for registering.',
@@ -386,6 +388,7 @@ const I18N = {
     step_basic: 'STEP 1', step_ticket: 'STEP 2', step_bni: 'STEP 3',
     step_events: 'STEP 4', step_other: 'STEP 5', step_confirm: 'STEP 6',
     privacy_label: '我同意 <a href="privacy.html" target="_blank" rel="noopener">隱私政策</a>',
+    cancel_policy_note: '※ 取消政策：2026年6月17日（含）以後取消，將收取參加費的100%。',
     submit: '送出報名', submitting: '送出中...',
     req: '※ 為必填項目',
     success_title: '報名完成', success_lead: '感謝您的報名。',
@@ -478,6 +481,7 @@ const I18N = {
     step_basic: 'STEP 1', step_ticket: 'STEP 2', step_bni: 'STEP 3',
     step_events: 'STEP 4', step_other: 'STEP 5', step_confirm: 'STEP 6',
     privacy_label: '<a href="privacy.html" target="_blank" rel="noopener">개인정보 처리방침</a>에 동의합니다',
+    cancel_policy_note: '※ 취소 정책: 2026년 6월 17일 이후 취소는 참가비의 100%가 부과됩니다.',
     submit: '이 내용으로 신청', submitting: '전송 중...',
     req: '※ 표시는 필수 항목',
     success_title: '신청 완료', success_lead: '신청해 주셔서 감사합니다.',
@@ -827,6 +831,9 @@ function renderForm() {
           <input type="checkbox" id="agree" name="agree" required />
           <div class="ck-text" style="font-size: 13px;">${T.privacy_label}</div>
         </label>
+        <div style="font-size: 12px; color: var(--muted); margin-top: 8px; padding-left: 28px;">
+          ${T.cancel_policy_note}
+        </div>
       </div>
 
       <div id="form-error"></div>

@@ -216,7 +216,7 @@ function setupSiteContent_(ss) {
     ['producer', 'webUrl',        'https://search-mania.net/',                      '公式サイト URL'],
     ['producer', 'howLabel',      '事業内容と本サイトについて',                       '紹介ブロックの見出し'],
     ['producer', 'howBody',
-      'SearchMania（株式会社SearchMania）は、沖縄を拠点に企業のWebマーケティング・MEO対策・SEO対策・DX構築・サイト制作と運用支援を行っています。本イベント公式サイトは、企画・デザイン・実装まで弊社が担当。さらに、運営スタッフであれば誰でも操作できるオンライン受付・チェックインシステムも独自に構築・導入しました。サイト本体はビルド工程を持たない軽量構成（React・Google スプレッドシート・Apps Script・Netlify）で動作し、主催者がスプレッドシートを更新するだけで内容が即時反映される、運用しやすい仕組みです。',
+      'SearchMania（株式会社SearchMania）は、沖縄を拠点に企業のWebマーケティング・MEO対策・SEO対策・DX構築・サイト制作と運用支援を行っています。本イベント公式サイトは、企画・デザイン・実装まで弊社が担当。さらに、運営スタッフであれば誰でも操作できるオンライン受付・チェックインシステムも独自に構築・導入しました。サイト本体はビルド工程を持たない軽量構成（React・Google スプレッドシート・Apps Script・Cloudflare Pages）で動作し、主催者がスプレッドシートを更新するだけで内容が即時反映される、運用しやすい仕組みです。',
       '紹介本文（自由に書き換え可）'],
 
     // ─── footer ───
@@ -468,7 +468,7 @@ function setupChapters_(ss) {
     // ─── 🇯🇵 日本 ────────────────────────────────────────────
     { region: '沖縄', chapters: [
       'TOP', 'Thanks', 'Blue Ocean', 'Grace', 'Lequios',
-      'Haisai', 'Dragon', '龍宮', 'Yanbaru',
+      'Haisai', 'Dragon', '龍宮', 'Yanbaru', 'AMAMIKU',
     ]},
     { region: '千葉京葉', chapters: [
       'DREAM BIG', 'DRAGON', 'CORN FIELD', 'Victory', 'Whales',
@@ -926,7 +926,7 @@ function appendProducerRowsToSiteContent() {
     ['producer', 'webUrl',        'https://search-mania.net/',                      '公式サイト URL'],
     ['producer', 'howLabel',      '事業内容と本サイトについて',                       '紹介ブロックの見出し'],
     ['producer', 'howBody',
-      'SearchMania（株式会社SearchMania）は、沖縄を拠点に企業のWebマーケティング・MEO対策・SEO対策・DX構築・サイト制作と運用支援を行っています。本イベント公式サイトは、企画・デザイン・実装まで弊社が担当。さらに、運営スタッフであれば誰でも操作できるオンライン受付・チェックインシステムも独自に構築・導入しました。サイト本体はビルド工程を持たない軽量構成（React・Google スプレッドシート・Apps Script・Netlify）で動作し、主催者がスプレッドシートを更新するだけで内容が即時反映される、運用しやすい仕組みです。',
+      'SearchMania（株式会社SearchMania）は、沖縄を拠点に企業のWebマーケティング・MEO対策・SEO対策・DX構築・サイト制作と運用支援を行っています。本イベント公式サイトは、企画・デザイン・実装まで弊社が担当。さらに、運営スタッフであれば誰でも操作できるオンライン受付・チェックインシステムも独自に構築・導入しました。サイト本体はビルド工程を持たない軽量構成（React・Google スプレッドシート・Apps Script・Cloudflare Pages）で動作し、主催者がスプレッドシートを更新するだけで内容が即時反映される、運用しやすい仕組みです。',
       '紹介本文（自由に書き換え可）'],
   ];
 

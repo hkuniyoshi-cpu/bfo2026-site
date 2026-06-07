@@ -93,7 +93,7 @@ const I18N = {
       webLabel: "WEB",
       webUrl: "https://search-mania.net/",
       howLabel: "事業内容と本サイトについて",
-      howBody: "SearchMania（株式会社SearchMania）は、沖縄を拠点に企業のWebマーケティング・MEO対策・SEO対策・DX構築・サイト制作と運用支援を行っています。本イベント公式サイトは、企画・デザイン・実装まで弊社が担当。さらに、運営スタッフであれば誰でも操作できるオンライン受付・チェックインシステムも独自に構築・導入しました。サイト本体はビルド工程を持たない軽量構成（React・Google スプレッドシート・Apps Script・Netlify）で動作し、主催者がスプレッドシートを更新するだけで内容が即時反映される、運用しやすい仕組みです。",
+      howBody: "SearchMania（株式会社SearchMania）は、沖縄を拠点に企業のWebマーケティング・MEO対策・SEO対策・DX構築・サイト制作と運用支援を行っています。本イベント公式サイトは、企画・デザイン・実装まで弊社が担当。さらに、運営スタッフであれば誰でも操作できるオンライン受付・チェックインシステムも独自に構築・導入しました。サイト本体はビルド工程を持たない軽量構成（React・Google スプレッドシート・Apps Script・Cloudflare Pages）で動作し、主催者がスプレッドシートを更新するだけで内容が即時反映される、運用しやすい仕組みです。",
     },
     footer: {
       produced: "Produced by BNI沖縄リージョン",
@@ -185,7 +185,7 @@ const I18N = {
       webLabel: "WEB",
       webUrl: "https://search-mania.net/",
       howLabel: "About SearchMania & this Site",
-      howBody: "SearchMania Inc. is an Okinawa-based agency specialising in web marketing, MEO, SEO, DX implementation, and website design & operation for businesses. We produced this official BFO2026 site end-to-end — planning, design, and implementation. We also built a custom online reception & check-in system that any operations staff can use on the day. The site itself runs on a no-build, lightweight stack (React, Google Sheets, Apps Script, Netlify), so the entire content updates instantly whenever the organisers edit the source spreadsheet — making ongoing operation effortless.",
+      howBody: "SearchMania Inc. is an Okinawa-based agency specialising in web marketing, MEO, SEO, DX implementation, and website design & operation for businesses. We produced this official BFO2026 site end-to-end — planning, design, and implementation. We also built a custom online reception & check-in system that any operations staff can use on the day. The site itself runs on a no-build, lightweight stack (React, Google Sheets, Apps Script, Cloudflare Pages), so the entire content updates instantly whenever the organisers edit the source spreadsheet — making ongoing operation effortless.",
     },
     footer: {
       produced: "Produced by BNI Okinawa Region", developed: "Website by SearchMania Inc.",
@@ -273,7 +273,7 @@ const I18N = {
       webLabel: "WEB",
       webUrl: "https://search-mania.net/",
       howLabel: "公司業務與本網站",
-      howBody: "SearchMania（株式會社SearchMania）以沖繩為據點，為企業提供網路行銷、MEO對策、SEO對策、DX構築，以及網站建置與營運的支援服務。本活動官方網站由本公司全程企劃、設計與實作；同時自主開發並導入了任何運營人員都可操作的線上報到・簽到系統。網站本體採用無建置流程的輕量架構（React・Google Sheets・Apps Script・Netlify），主辦方僅需更新試算表，網站內容即可即時反映，營運維護更為簡便。",
+      howBody: "SearchMania（株式會社SearchMania）以沖繩為據點，為企業提供網路行銷、MEO對策、SEO對策、DX構築，以及網站建置與營運的支援服務。本活動官方網站由本公司全程企劃、設計與實作；同時自主開發並導入了任何運營人員都可操作的線上報到・簽到系統。網站本體採用無建置流程的輕量架構（React・Google Sheets・Apps Script・Cloudflare Pages），主辦方僅需更新試算表，網站內容即可即時反映，營運維護更為簡便。",
     },
     footer: {
       produced: "Produced by BNI沖繩區域", developed: "Website by SearchMania Inc.",
@@ -361,7 +361,7 @@ const I18N = {
       webLabel: "WEB",
       webUrl: "https://search-mania.net/",
       howLabel: "회사 사업과 본 사이트",
-      howBody: "SearchMania(주식회사 SearchMania)는 오키나와를 거점으로 기업의 웹 마케팅・MEO 대책・SEO 대책・DX 구축・웹사이트 제작/운영을 지원합니다. 본 이벤트 공식 사이트는 기획・디자인・구현까지 당사가 담당했으며, 운영 스태프 누구나 사용할 수 있는 온라인 접수・체크인 시스템도 직접 구축・도입했습니다. 사이트 본체는 빌드 공정이 없는 경량 구성(React・Google Sheets・Apps Script・Netlify)으로 동작하며, 주최자가 스프레드시트를 갱신하기만 하면 내용이 즉시 반영되어 운영이 쉬운 구조입니다.",
+      howBody: "SearchMania(주식회사 SearchMania)는 오키나와를 거점으로 기업의 웹 마케팅・MEO 대책・SEO 대책・DX 구축・웹사이트 제작/운영을 지원합니다. 본 이벤트 공식 사이트는 기획・디자인・구현까지 당사가 담당했으며, 운영 스태프 누구나 사용할 수 있는 온라인 접수・체크인 시스템도 직접 구축・도입했습니다. 사이트 본체는 빌드 공정이 없는 경량 구성(React・Google Sheets・Apps Script・Cloudflare Pages)으로 동작하며, 주최자가 스프레드시트를 갱신하기만 하면 내용이 즉시 반영되어 운영이 쉬운 구조입니다.",
     },
     footer: {
       produced: "Produced by BNI 오키나와 리전", developed: "Website by SearchMania Inc.",
