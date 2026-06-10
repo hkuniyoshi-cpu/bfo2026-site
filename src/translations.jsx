@@ -78,6 +78,7 @@ const I18N = {
       cta: "BNI沖縄 公式サイトで見る",
     },
     cta: { title: "一緒に、未来をつくろう。", sub: "通常5,000円", subFree: "事前申込で無料", limit: "先着1,000名様限定", btn: "展示会事前申込み" },
+    sponsors: { title: "後援" },
     producer: {
       enLabel: "PRODUCED BY",
       repLabel: "REPRESENTATIVE",
@@ -170,6 +171,7 @@ const I18N = {
       cta: "Visit BNI Okinawa site",
     },
     cta: { title: "Let's build the future, together.", sub: "Regular ¥5,000", subFree: "FREE with pre-registration", limit: "First 1,000 guests only", btn: "Pre-register for Expo" },
+    sponsors: { title: "Supported by" },
     producer: {
       enLabel: "PRODUCED BY",
       repLabel: "REPRESENTATIVE",
@@ -258,6 +260,7 @@ const I18N = {
       cta: "前往 BNI 沖繩官方網站",
     },
     cta: { title: "讓我們一起，創造未來。", sub: "一般 5,000日圓", subFree: "事前報名免費", limit: "限前1,000名", btn: "展會事前報名" },
+    sponsors: { title: "後援單位" },
     producer: {
       enLabel: "PRODUCED BY",
       repLabel: "REPRESENTATIVE",
@@ -346,6 +349,7 @@ const I18N = {
       cta: "BNI 오키나와 공식 사이트 방문",
     },
     cta: { title: "함께, 미래를 만들자.", sub: "일반 5,000엔", subFree: "사전 신청 시 무료", limit: "선착 1,000명 한정", btn: "전시회 사전 신청" },
+    sponsors: { title: "후원" },
     producer: {
       enLabel: "PRODUCED BY",
       repLabel: "REPRESENTATIVE",

@@ -290,6 +290,7 @@ function VariantA2({ lang, onLangChange, fontFamily }) {
       <A2Producer t={t} />
       <A2Contact t={t} />
       <A2Cta t={t} />
+      <A2Sponsors t={t} />
       <A2Footer t={t} />
     </div>
   );
@@ -1399,6 +1400,78 @@ function A2Cta({ t }) {
             }}>※ {t.cta.limit}</span>
           )}
         </a>
+      </div>
+    </section>
+  );
+}
+
+// ─── 後援企業セクション ─────────────────────────────────────
+const SPONSORS = [
+  { name: 'エフエム沖縄株式会社',     url: 'https://www.fmokinawa.co.jp/' },
+  { name: '株式会社琉球新報社',       url: 'https://ryukyushimpo.jp/' },
+  { name: '琉球放送株式会社',         url: 'https://www.rbc.co.jp/' },
+  { name: '沖縄テレビ放送株式会社',   url: 'https://www.otv.co.jp/' },
+  { name: '株式会社沖縄タイムス社',   url: 'https://www.okinawatimes.co.jp/' },
+  { name: '株式会社ラジオ沖縄',       url: 'https://www.rokinawa.co.jp/' },
+];
+
+function A2Sponsors({ t }) {
+  const title = (t.sponsors && t.sponsors.title) || '後援';
+  return (
+    <section style={{
+      padding: '60px 36px 80px',
+      background: a2.bg,
+      borderTop: `1px solid ${a2.fg}10`,
+    }}>
+      <div style={{ maxWidth: 980, margin: '0 auto', textAlign: 'center' }}>
+        <div style={{
+          display: 'inline-flex', alignItems: 'center', gap: 10,
+          marginBottom: 28,
+        }}>
+          <span style={{ width: 24, height: 1, background: a2.fg, opacity: 0.4 }} />
+          <span style={{
+            fontSize: 11, fontWeight: 800, letterSpacing: '0.35em',
+            color: a2.fg, opacity: 0.7,
+            fontFamily: 'JetBrains Mono, ui-monospace, monospace',
+          }}>{title.toUpperCase()}</span>
+          <span style={{ width: 24, height: 1, background: a2.fg, opacity: 0.4 }} />
+        </div>
+        <h3 style={{
+          fontSize: 13, fontWeight: 700, letterSpacing: '0.18em',
+          margin: '0 0 24px', color: a2.fg, opacity: 0.85,
+        }}>{title}</h3>
+        <ul style={{
+          listStyle: 'none', margin: 0, padding: 0,
+          display: 'flex', flexWrap: 'wrap', justifyContent: 'center',
+          gap: '10px 24px',
+        }}>
+          {SPONSORS.map(s => (
+            <li key={s.url}>
+              <a href={s.url} target="_blank" rel="noopener noreferrer"
+                style={{
+                  fontSize: 13.5, fontWeight: 600, color: a2.fg,
+                  textDecoration: 'none', opacity: 0.78,
+                  borderBottom: `1px solid ${a2.fg}26`,
+                  paddingBottom: 2, transition: 'opacity .15s ease, border-color .15s ease',
+                  whiteSpace: 'nowrap',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.opacity = '1';
+                  e.currentTarget.style.borderBottomColor = a2.shu;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.opacity = '0.78';
+                  e.currentTarget.style.borderBottomColor = `${a2.fg}26`;
+                }}
+              >{s.name}</a>
+            </li>
+          ))}
+        </ul>
+        <p style={{
+          marginTop: 22, fontSize: 10.5, letterSpacing: '0.12em',
+          color: a2.fg, opacity: 0.45,
+          fontFamily: 'JetBrains Mono, ui-monospace, monospace',
+        }}>(50音順)</p>
       </div>
     </section>
   );
