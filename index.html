@@ -233,6 +233,37 @@
     .video-intro-skip { top: 16px; right: 16px; padding: 8px 18px; font-size: 13px; }
     .video-intro-mute { bottom: 16px; right: 16px; width: 44px; height: 44px; font-size: 20px; }
   }
+
+  /* ── CM 再生ランチャー（右下・控えめ） ───────────────── */
+  .video-launcher {
+    position: fixed; bottom: 20px; right: 20px; z-index: 998;
+    width: 64px; height: 64px; border-radius: 12px; border: none;
+    background: rgba(26, 22, 18, 0.78); color: #fff;
+    cursor: pointer; padding: 0;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.22);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform .2s ease, background .2s ease, opacity .2s ease;
+    opacity: 0.82;
+  }
+  .video-launcher:hover {
+    background: rgba(26, 22, 18, 0.95);
+    transform: translateY(-2px);
+    opacity: 1;
+  }
+  .vl-inner {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 2px; line-height: 1;
+  }
+  .vl-play { font-size: 20px; }
+  .vl-label {
+    font-size: 9px; letter-spacing: 0.18em; font-weight: 700;
+    font-family: 'JetBrains Mono', ui-monospace, monospace; opacity: 0.92;
+  }
+  @media (max-width: 640px) {
+    .video-launcher { bottom: 14px; right: 14px; width: 52px; height: 52px; border-radius: 10px; }
+    .vl-play { font-size: 17px; }
+    .vl-label { font-size: 8px; }
+  }
 </style>
 
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
@@ -376,34 +407,24 @@ function detectInitialLang() {
   return 'ja';
 }
 
-// ── CM動画イントロ：1日1回までトップページで再生 ──────────────
-function VideoIntro() {
-  const todayKey = () => new Date().toISOString().slice(0, 10);
-  const [show, setShow] = React.useState(() => {
-    try {
-      return localStorage.getItem('bfo_video_seen_date') !== todayKey();
-    } catch { return false; }
-  });
+// ── CM動画モーダル：自動再生（1日1回）＋ ランチャーから再再生 ──
+function VideoIntro({ open, onClose }) {
   const [muted, setMuted] = React.useState(true);
   const videoRef = React.useRef(null);
 
-  const dismiss = React.useCallback(() => {
-    try { localStorage.setItem('bfo_video_seen_date', todayKey()); } catch {}
-    setShow(false);
-  }, []);
-
   React.useEffect(() => {
-    if (!show) return;
+    if (!open) return;
+    setMuted(true);
     document.body.style.overflow = 'hidden';
-    const onKey = (e) => { if (e.key === 'Escape') dismiss(); };
+    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
     window.addEventListener('keydown', onKey);
     return () => {
       document.body.style.overflow = '';
       window.removeEventListener('keydown', onKey);
     };
-  }, [show, dismiss]);
+  }, [open, onClose]);
 
-  if (!show) return null;
+  if (!open) return null;
 
   const toggleMute = (e) => {
     e.stopPropagation();
@@ -415,7 +436,7 @@ function VideoIntro() {
   };
 
   return (
-    <div className="video-intro-overlay" onClick={dismiss} role="dialog" aria-label="CM 動画">
+    <div className="video-intro-overlay" onClick={onClose} role="dialog" aria-label="CM 動画">
       <video
         ref={videoRef}
         className="video-intro-video"
@@ -424,11 +445,11 @@ function VideoIntro() {
         muted
         playsInline
         preload="auto"
-        onEnded={dismiss}
-        onError={dismiss}
+        onEnded={onClose}
+        onError={onClose}
         onClick={(e) => e.stopPropagation()}
       />
-      <button className="video-intro-skip" onClick={dismiss} aria-label="スキップ">スキップ ▶</button>
+      <button className="video-intro-skip" onClick={onClose} aria-label="スキップ">スキップ ▶</button>
       <button className="video-intro-mute" onClick={toggleMute} aria-label={muted ? '音を出す' : '音を消す'}>
         {muted ? '🔇' : '🔊'}
       </button>
@@ -436,15 +457,36 @@ function VideoIntro() {
   );
 }
 
+function VideoLauncher({ onClick }) {
+  return (
+    <button className="video-launcher" onClick={onClick} aria-label="CMをもう一度見る" title="CMをもう一度見る">
+      <span className="vl-inner">
+        <span className="vl-play" aria-hidden="true">▶</span>
+        <span className="vl-label">CM</span>
+      </span>
+    </button>
+  );
+}
+
 function App() {
   const [lang, setLang] = React.useState(detectInitialLang);
+  const todayKey = () => new Date().toISOString().slice(0, 10);
+  const [videoOpen, setVideoOpen] = React.useState(() => {
+    try { return localStorage.getItem('bfo_video_seen_date') !== todayKey(); }
+    catch { return false; }
+  });
   React.useEffect(() => {
     localStorage.setItem('bfo2026_lang', lang);
     document.documentElement.lang = lang;
   }, [lang]);
+  const closeVideo = React.useCallback(() => {
+    try { localStorage.setItem('bfo_video_seen_date', todayKey()); } catch {}
+    setVideoOpen(false);
+  }, []);
   return (
     <>
-      <VideoIntro />
+      <VideoIntro open={videoOpen} onClose={closeVideo} />
+      <VideoLauncher onClick={() => setVideoOpen(true)} />
       <VariantA2 lang={lang} onLangChange={setLang} fontFamily={null} />
     </>
   );
