@@ -1406,70 +1406,109 @@ function A2Cta({ t }) {
 }
 
 // ─── 後援企業セクション ─────────────────────────────────────
+// 50音順（読みの最初の音で並び）:
+//   え → お → か行（株式会社... 二音目で再ソート）→ り
 const SPONSORS = [
-  { name: 'エフエム沖縄株式会社',     url: 'https://www.fmokinawa.co.jp/' },
-  { name: '株式会社琉球新報社',       url: 'https://ryukyushimpo.jp/' },
-  { name: '琉球放送株式会社',         url: 'https://www.rbc.co.jp/' },
-  { name: '沖縄テレビ放送株式会社',   url: 'https://www.otv.co.jp/' },
-  { name: '株式会社沖縄タイムス社',   url: 'https://www.okinawatimes.co.jp/' },
-  { name: '株式会社ラジオ沖縄',       url: 'https://www.rokinawa.co.jp/' },
+  { name: 'エフエム沖縄株式会社',     url: 'https://www.fmokinawa.co.jp/',     media: 'RADIO',  mediaJa: 'ラジオ' },
+  { name: '沖縄テレビ放送株式会社',   url: 'https://www.otv.co.jp/',           media: 'TV',     mediaJa: 'テレビ' },
+  { name: '株式会社沖縄タイムス社',   url: 'https://www.okinawatimes.co.jp/',  media: 'PRESS',  mediaJa: '新聞' },
+  { name: '株式会社ラジオ沖縄',       url: 'https://www.rokinawa.co.jp/',      media: 'RADIO',  mediaJa: 'ラジオ' },
+  { name: '株式会社琉球新報社',       url: 'https://ryukyushimpo.jp/',         media: 'PRESS',  mediaJa: '新聞' },
+  { name: '琉球放送株式会社',         url: 'https://www.rbc.co.jp/',           media: 'TV',     mediaJa: 'テレビ' },
 ];
+
+const MEDIA_COLOR = {
+  TV:    '#1e5a82', // 藍 — テレビ
+  RADIO: '#c89615', // 黄 — ラジオ
+  PRESS: '#d63b2c', // 朱 — 新聞
+};
+const MEDIA_ICON = {
+  TV:    (<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="5" width="18" height="12" rx="1.5"/><path d="M8 21h8M12 17v4"/></svg>),
+  RADIO: (<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="8" cy="14" r="3"/><path d="M4 20V8l16-4v16"/><circle cx="15.5" cy="14" r="1.2" fill="currentColor"/></svg>),
+  PRESS: (<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="14" height="16" rx="1.5"/><path d="M6 8h8M6 12h8M6 16h5M17 9h3v9.5a1.5 1.5 0 0 1-3 0V9z"/></svg>),
+};
 
 function A2Sponsors({ t }) {
   const title = (t.sponsors && t.sponsors.title) || '後援';
   return (
     <section style={{
-      padding: '60px 36px 80px',
+      padding: '70px 36px 90px',
       background: a2.bg,
       borderTop: `1px solid ${a2.fg}10`,
     }}>
-      <div style={{ maxWidth: 980, margin: '0 auto', textAlign: 'center' }}>
+      <div style={{ maxWidth: 1040, margin: '0 auto' }}>
         <div style={{
-          display: 'inline-flex', alignItems: 'center', gap: 10,
-          marginBottom: 28,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          gap: 14, marginBottom: 36,
         }}>
-          <span style={{ width: 24, height: 1, background: a2.fg, opacity: 0.4 }} />
-          <span style={{
-            fontSize: 11, fontWeight: 800, letterSpacing: '0.35em',
-            color: a2.fg, opacity: 0.7,
-            fontFamily: 'JetBrains Mono, ui-monospace, monospace',
-          }}>{title.toUpperCase()}</span>
-          <span style={{ width: 24, height: 1, background: a2.fg, opacity: 0.4 }} />
+          <span style={{ width: 32, height: 1, background: a2.fg, opacity: 0.35 }} />
+          <h3 style={{
+            margin: 0, fontSize: 14, fontWeight: 800, letterSpacing: '0.25em',
+            color: a2.fg, opacity: 0.78,
+          }}>{title}</h3>
+          <span style={{ width: 32, height: 1, background: a2.fg, opacity: 0.35 }} />
         </div>
-        <h3 style={{
-          fontSize: 13, fontWeight: 700, letterSpacing: '0.18em',
-          margin: '0 0 24px', color: a2.fg, opacity: 0.85,
-        }}>{title}</h3>
-        <ul style={{
+        <ul className="a2-sponsors-grid" style={{
           listStyle: 'none', margin: 0, padding: 0,
-          display: 'flex', flexWrap: 'wrap', justifyContent: 'center',
-          gap: '10px 24px',
+          display: 'grid', gap: 14,
+          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+          maxWidth: 920, marginLeft: 'auto', marginRight: 'auto',
         }}>
-          {SPONSORS.map(s => (
-            <li key={s.url}>
-              <a href={s.url} target="_blank" rel="noopener noreferrer"
-                style={{
-                  fontSize: 13.5, fontWeight: 600, color: a2.fg,
-                  textDecoration: 'none', opacity: 0.78,
-                  borderBottom: `1px solid ${a2.fg}26`,
-                  paddingBottom: 2, transition: 'opacity .15s ease, border-color .15s ease',
-                  whiteSpace: 'nowrap',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.opacity = '1';
-                  e.currentTarget.style.borderBottomColor = a2.shu;
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.opacity = '0.78';
-                  e.currentTarget.style.borderBottomColor = `${a2.fg}26`;
-                }}
-              >{s.name}</a>
-            </li>
-          ))}
+          {SPONSORS.map(s => {
+            const color = MEDIA_COLOR[s.media];
+            const icon = MEDIA_ICON[s.media];
+            return (
+              <li key={s.url}>
+                <a href={s.url} target="_blank" rel="noopener noreferrer"
+                  className="a2-sponsor-card"
+                  style={{
+                    display: 'flex', flexDirection: 'column',
+                    padding: '16px 18px',
+                    background: '#fff',
+                    border: `1px solid ${a2.fg}14`,
+                    borderTop: `3px solid ${color}`,
+                    textDecoration: 'none', color: 'inherit',
+                    transition: 'transform .2s ease, box-shadow .2s ease, border-color .2s ease',
+                    minHeight: 92,
+                    height: '100%',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-3px)';
+                    e.currentTarget.style.boxShadow = '0 8px 20px rgba(0,0,0,0.08)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
+                >
+                  <div style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 6,
+                    color: color, marginBottom: 10,
+                  }}>
+                    {icon}
+                    <span style={{
+                      fontSize: 10, fontWeight: 800, letterSpacing: '0.22em',
+                      fontFamily: 'JetBrains Mono, ui-monospace, monospace',
+                    }}>{s.media}</span>
+                    <span style={{
+                      fontSize: 10.5, fontWeight: 700, color: a2.fg, opacity: 0.5,
+                      marginLeft: 2,
+                    }}>／ {s.mediaJa}</span>
+                  </div>
+                  <div style={{
+                    fontSize: 14, fontWeight: 700,
+                    color: a2.fg, lineHeight: 1.4,
+                    fontFamily: '"Noto Serif JP", "Yu Mincho", serif',
+                  }}>{s.name}</div>
+                </a>
+              </li>
+            );
+          })}
         </ul>
         <p style={{
-          marginTop: 22, fontSize: 10.5, letterSpacing: '0.12em',
-          color: a2.fg, opacity: 0.45,
+          marginTop: 28, marginBottom: 0, textAlign: 'center',
+          fontSize: 10.5, letterSpacing: '0.18em',
+          color: a2.fg, opacity: 0.42,
           fontFamily: 'JetBrains Mono, ui-monospace, monospace',
         }}>(50音順)</p>
       </div>
