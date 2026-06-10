@@ -197,6 +197,42 @@
   a { color: inherit; text-decoration: none; }
   #root { min-height: 100vh; }
   .preboot { display: flex; align-items: center; justify-content: center; height: 100vh; color: #5a4a3a; font-size: 13px; letter-spacing: .2em; font-family: system-ui, sans-serif; }
+
+  /* ── CM 動画イントロ ───────────────────────────────────── */
+  .video-intro-overlay {
+    position: fixed; inset: 0; background: #000; z-index: 9999;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; animation: vi-fade-in .25s ease-out;
+  }
+  @keyframes vi-fade-in { from { opacity: 0; } to { opacity: 1; } }
+  .video-intro-video {
+    max-width: 100%; max-height: 100%; width: auto; height: auto;
+    background: #000;
+  }
+  .video-intro-skip {
+    position: absolute; top: 24px; right: 24px;
+    background: rgba(255,255,255,0.94); color: #1a1612;
+    border: none; border-radius: 999px; padding: 10px 22px;
+    font-weight: 700; font-size: 14px; letter-spacing: .05em;
+    cursor: pointer; z-index: 2;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    transition: transform .15s ease, background .15s ease;
+  }
+  .video-intro-skip:hover { background: #fff; transform: translateY(-1px); }
+  .video-intro-mute {
+    position: absolute; bottom: 24px; right: 24px;
+    background: rgba(255,255,255,0.94); color: #1a1612;
+    border: none; border-radius: 50%; width: 48px; height: 48px;
+    font-size: 22px; cursor: pointer; z-index: 2;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform .15s ease, background .15s ease;
+  }
+  .video-intro-mute:hover { background: #fff; transform: translateY(-1px); }
+  @media (max-width: 640px) {
+    .video-intro-skip { top: 16px; right: 16px; padding: 8px 18px; font-size: 13px; }
+    .video-intro-mute { bottom: 16px; right: 16px; width: 44px; height: 44px; font-size: 20px; }
+  }
 </style>
 
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
@@ -340,13 +376,78 @@ function detectInitialLang() {
   return 'ja';
 }
 
+// ── CM動画イントロ：1日1回までトップページで再生 ──────────────
+function VideoIntro() {
+  const todayKey = () => new Date().toISOString().slice(0, 10);
+  const [show, setShow] = React.useState(() => {
+    try {
+      return localStorage.getItem('bfo_video_seen_date') !== todayKey();
+    } catch { return false; }
+  });
+  const [muted, setMuted] = React.useState(true);
+  const videoRef = React.useRef(null);
+
+  const dismiss = React.useCallback(() => {
+    try { localStorage.setItem('bfo_video_seen_date', todayKey()); } catch {}
+    setShow(false);
+  }, []);
+
+  React.useEffect(() => {
+    if (!show) return;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e) => { if (e.key === 'Escape') dismiss(); };
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [show, dismiss]);
+
+  if (!show) return null;
+
+  const toggleMute = (e) => {
+    e.stopPropagation();
+    setMuted(prev => {
+      const next = !prev;
+      if (videoRef.current) videoRef.current.muted = next;
+      return next;
+    });
+  };
+
+  return (
+    <div className="video-intro-overlay" onClick={dismiss} role="dialog" aria-label="CM 動画">
+      <video
+        ref={videoRef}
+        className="video-intro-video"
+        src="assets/cm.mp4"
+        autoPlay
+        muted
+        playsInline
+        preload="auto"
+        onEnded={dismiss}
+        onError={dismiss}
+        onClick={(e) => e.stopPropagation()}
+      />
+      <button className="video-intro-skip" onClick={dismiss} aria-label="スキップ">スキップ ▶</button>
+      <button className="video-intro-mute" onClick={toggleMute} aria-label={muted ? '音を出す' : '音を消す'}>
+        {muted ? '🔇' : '🔊'}
+      </button>
+    </div>
+  );
+}
+
 function App() {
   const [lang, setLang] = React.useState(detectInitialLang);
   React.useEffect(() => {
     localStorage.setItem('bfo2026_lang', lang);
     document.documentElement.lang = lang;
   }, [lang]);
-  return <VariantA2 lang={lang} onLangChange={setLang} fontFamily={null} />;
+  return (
+    <>
+      <VideoIntro />
+      <VariantA2 lang={lang} onLangChange={setLang} fontFamily={null} />
+    </>
+  );
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App />);
