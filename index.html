@@ -234,35 +234,45 @@
     .video-intro-mute { bottom: 16px; right: 16px; width: 44px; height: 44px; font-size: 20px; }
   }
 
-  /* ── CM 再生ランチャー（右下・控えめ） ───────────────── */
+  /* ── CM 再生ランチャー（右下・ピル型・控えめ） ────────── */
   .video-launcher {
     position: fixed; bottom: 20px; right: 20px; z-index: 998;
-    width: 64px; height: 64px; border-radius: 12px; border: none;
-    background: rgba(26, 22, 18, 0.78); color: #fff;
-    cursor: pointer; padding: 0;
+    height: 44px; padding: 0 18px 0 16px; border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(26, 22, 18, 0.86); color: #fff;
+    cursor: pointer;
     box-shadow: 0 4px 14px rgba(0,0,0,0.22);
-    display: flex; align-items: center; justify-content: center;
+    display: inline-flex; align-items: center;
     transition: transform .2s ease, background .2s ease, opacity .2s ease;
-    opacity: 0.82;
+    opacity: 0.88;
+    line-height: 1;
   }
   .video-launcher:hover {
-    background: rgba(26, 22, 18, 0.95);
+    background: rgba(26, 22, 18, 0.98);
     transform: translateY(-2px);
     opacity: 1;
   }
   .vl-inner {
-    display: flex; flex-direction: column; align-items: center;
-    justify-content: center; gap: 2px; line-height: 1;
+    display: inline-flex; flex-direction: row; align-items: center; gap: 10px;
   }
-  .vl-play { font-size: 20px; }
+  .vl-play-circle {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: #d63b2c;
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .vl-play { font-size: 9px; color: #fff; transform: translateX(1px); }
   .vl-label {
-    font-size: 9px; letter-spacing: 0.18em; font-weight: 700;
-    font-family: 'JetBrains Mono', ui-monospace, monospace; opacity: 0.92;
+    font-size: 12.5px; letter-spacing: 0.04em; font-weight: 700;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    white-space: nowrap;
   }
   @media (max-width: 640px) {
-    .video-launcher { bottom: 14px; right: 14px; width: 52px; height: 52px; border-radius: 10px; }
-    .vl-play { font-size: 17px; }
-    .vl-label { font-size: 8px; }
+    .video-launcher { bottom: 14px; right: 14px; height: 40px; padding: 0 14px 0 12px; }
+    .vl-inner { gap: 8px; }
+    .vl-play-circle { width: 20px; height: 20px; }
+    .vl-play { font-size: 8px; }
+    .vl-label { font-size: 12px; }
   }
 </style>
 
@@ -457,12 +467,19 @@ function VideoIntro({ open, onClose }) {
   );
 }
 
-function VideoLauncher({ onClick }) {
+function VideoLauncher({ onClick, lang }) {
+  const labels = {
+    ja: 'CM動画を見る',
+    en: 'Watch TV CM',
+    zh: '觀看廣告影片',
+    ko: 'CM 영상 보기',
+  };
+  const label = labels[lang] || labels.ja;
   return (
-    <button className="video-launcher" onClick={onClick} aria-label="CMをもう一度見る" title="CMをもう一度見る">
+    <button className="video-launcher" onClick={onClick} aria-label={label} title={label}>
       <span className="vl-inner">
-        <span className="vl-play" aria-hidden="true">▶</span>
-        <span className="vl-label">CM</span>
+        <span className="vl-play-circle" aria-hidden="true"><span className="vl-play">▶</span></span>
+        <span className="vl-label">{label}</span>
       </span>
     </button>
   );
@@ -486,7 +503,7 @@ function App() {
   return (
     <>
       <VideoIntro open={videoOpen} onClose={closeVideo} />
-      <VideoLauncher onClick={() => setVideoOpen(true)} />
+      <VideoLauncher onClick={() => setVideoOpen(true)} lang={lang} />
       <VariantA2 lang={lang} onLangChange={setLang} fontFamily={null} />
     </>
   );
