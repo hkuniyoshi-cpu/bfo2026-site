@@ -1416,6 +1416,7 @@ const SPONSORS = [
   { name: '株式会社ラジオ沖縄',                   url: 'https://www.rokinawa.co.jp/',      media: 'RADIO',   mediaJa: 'ラジオ' },
   { name: '株式会社琉球新報社',                   url: 'https://ryukyushimpo.jp/',         media: 'PRESS',   mediaJa: '新聞' },
   { name: '宜野湾市',                             url: 'https://www.city.ginowan.lg.jp/',  media: 'CITY',    mediaJa: '自治体' },
+  { name: '琉球朝日放送株式会社',                 url: 'https://www.qab.co.jp/',           media: 'TV',      mediaJa: 'テレビ' },
   { name: '琉球放送株式会社',                     url: 'https://www.rbc.co.jp/',           media: 'TV',      mediaJa: 'テレビ' },
 ];
 
