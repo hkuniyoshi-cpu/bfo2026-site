@@ -1,4 +1,5 @@
-/bfo77 /bfo77.html 200
-/privacy /privacy.html 200
-/terms /terms.html 200
-/guidelines /guidelines.html 200
+# Cloudflare Pages は .html を自動でクリーンURL化（/foo.html ⇄ /foo）
+# 明示的なリライトルールは不要。書くと .html 自動削除と衝突して
+# 無限リダイレクトループになる（2026-06 検出 / privacy.html 等）。
+#
+# 必要が出てきたらここに追加すること。
