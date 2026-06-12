@@ -1406,26 +1406,32 @@ function A2Cta({ t }) {
 }
 
 // ─── 後援企業セクション ─────────────────────────────────────
-// 50音順（読みの最初の音で並び）:
-//   え → お → か行（株式会社... 二音目で再ソート）→ り
+// 50音順（読みの最初の音で並び・濁音は同行の清音の直後）:
+//   え → お(きなわけん) → お(きなわてれび) → か(ぶ…お/ら/り) → ぎ → り
 const SPONSORS = [
-  { name: 'エフエム沖縄株式会社',     url: 'https://www.fmokinawa.co.jp/',     media: 'RADIO',  mediaJa: 'ラジオ' },
-  { name: '沖縄テレビ放送株式会社',   url: 'https://www.otv.co.jp/',           media: 'TV',     mediaJa: 'テレビ' },
-  { name: '株式会社沖縄タイムス社',   url: 'https://www.okinawatimes.co.jp/',  media: 'PRESS',  mediaJa: '新聞' },
-  { name: '株式会社ラジオ沖縄',       url: 'https://www.rokinawa.co.jp/',      media: 'RADIO',  mediaJa: 'ラジオ' },
-  { name: '株式会社琉球新報社',       url: 'https://ryukyushimpo.jp/',         media: 'PRESS',  mediaJa: '新聞' },
-  { name: '琉球放送株式会社',         url: 'https://www.rbc.co.jp/',           media: 'TV',     mediaJa: 'テレビ' },
+  { name: 'エフエム沖縄株式会社',                 url: 'https://www.fmokinawa.co.jp/',     media: 'RADIO',   mediaJa: 'ラジオ' },
+  { name: '沖縄県観光コンベンションビューロー',     url: 'https://www.ocvb.or.jp/',          media: 'TOURISM', mediaJa: '観光' },
+  { name: '沖縄テレビ放送株式会社',               url: 'https://www.otv.co.jp/',           media: 'TV',      mediaJa: 'テレビ' },
+  { name: '株式会社沖縄タイムス社',               url: 'https://www.okinawatimes.co.jp/',  media: 'PRESS',   mediaJa: '新聞' },
+  { name: '株式会社ラジオ沖縄',                   url: 'https://www.rokinawa.co.jp/',      media: 'RADIO',   mediaJa: 'ラジオ' },
+  { name: '株式会社琉球新報社',                   url: 'https://ryukyushimpo.jp/',         media: 'PRESS',   mediaJa: '新聞' },
+  { name: '宜野湾市',                             url: 'https://www.city.ginowan.lg.jp/',  media: 'CITY',    mediaJa: '自治体' },
+  { name: '琉球放送株式会社',                     url: 'https://www.rbc.co.jp/',           media: 'TV',      mediaJa: 'テレビ' },
 ];
 
 const MEDIA_COLOR = {
-  TV:    '#1e5a82', // 藍 — テレビ
-  RADIO: '#c89615', // 黄 — ラジオ
-  PRESS: '#d63b2c', // 朱 — 新聞
+  TV:      '#1e5a82', // 藍 — テレビ
+  RADIO:   '#c89615', // 黄 — ラジオ
+  PRESS:   '#d63b2c', // 朱 — 新聞
+  TOURISM: '#2f7a5a', // 緑 — 観光団体
+  CITY:    '#5a4a8a', // 紫 — 自治体
 };
 const MEDIA_ICON = {
-  TV:    (<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="5" width="18" height="12" rx="1.5"/><path d="M8 21h8M12 17v4"/></svg>),
-  RADIO: (<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="8" cy="14" r="3"/><path d="M4 20V8l16-4v16"/><circle cx="15.5" cy="14" r="1.2" fill="currentColor"/></svg>),
-  PRESS: (<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="14" height="16" rx="1.5"/><path d="M6 8h8M6 12h8M6 16h5M17 9h3v9.5a1.5 1.5 0 0 1-3 0V9z"/></svg>),
+  TV:      (<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="5" width="18" height="12" rx="1.5"/><path d="M8 21h8M12 17v4"/></svg>),
+  RADIO:   (<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="8" cy="14" r="3"/><path d="M4 20V8l16-4v16"/><circle cx="15.5" cy="14" r="1.2" fill="currentColor"/></svg>),
+  PRESS:   (<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="14" height="16" rx="1.5"/><path d="M6 8h8M6 12h8M6 16h5M17 9h3v9.5a1.5 1.5 0 0 1-3 0V9z"/></svg>),
+  TOURISM: (<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="17" cy="6" r="2"/><path d="M3 20l5-7 4 5 3-4 6 6H3z"/></svg>),
+  CITY:    (<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 21V9l9-5 9 5v12"/><rect x="10" y="14" width="4" height="7"/><path d="M7 11h1.5M15.5 11h1.5M7 15h1.5M15.5 15h1.5"/></svg>),
 };
 
 function A2Sponsors({ t }) {
