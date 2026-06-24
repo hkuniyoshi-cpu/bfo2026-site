@@ -167,6 +167,25 @@ const A2_CSS = `
   #exhibitors .a2-exhibitors-cats button { flex-shrink: 0; padding: 8px 14px !important; font-size: 12px !important; }
   #exhibitors .a2-exhibitors-cats::-webkit-scrollbar { display: none; }
 
+  /* ── お知らせ 行レイアウトをモバイルで2行化（タイトル折り返し改善） ── */
+  .a2-news-row {
+    grid-template-columns: auto 1fr auto !important;
+    grid-template-areas: "date tag arrow" "title title title" !important;
+    gap: 8px 12px !important;
+    row-gap: 10px !important;
+    padding: 16px 4px !important;
+  }
+  .a2-news-row .a2-news-date  { grid-area: date; font-size: 12px !important; }
+  .a2-news-row .a2-news-tag   { grid-area: tag; padding: 4px 12px !important; min-width: 0 !important; justify-self: start; }
+  .a2-news-row .a2-news-arrow { grid-area: arrow; }
+  .a2-news-row .a2-news-title {
+    grid-area: title;
+    font-size: 14.5px !important;
+    line-height: 1.55 !important;
+    word-break: auto-phrase;
+    overflow-wrap: break-word;
+  }
+
   /* ── ヴェニューレイアウト ブースインデックス ── */
   .a2-booth-index { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important; }
 
@@ -2567,6 +2586,7 @@ function A2News({ t, content }) {
             const ts = tagStyle(n.tag);
             return (
               <li key={i}
+                  className="a2-news-row"
                   onClick={() => setSelected(n)}
                   style={{
                     display: 'grid', gridTemplateColumns: '120px 90px 1fr auto', gap: 20,
@@ -2576,16 +2596,16 @@ function A2News({ t, content }) {
                   }}
                   onMouseEnter={(e) => { e.currentTarget.style.background = `${a2.shu}08`; e.currentTarget.style.transform = 'translateX(4px)'; }}
                   onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.transform = 'translateX(0)'; }}>
-                <span style={{ fontFamily: 'monospace', fontSize: 13, color: a2.fgSoft, letterSpacing: '0.05em', whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>{n.date}</span>
-                <span style={{
+                <span className="a2-news-date" style={{ fontFamily: 'monospace', fontSize: 13, color: a2.fgSoft, letterSpacing: '0.05em', whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>{n.date}</span>
+                <span className="a2-news-tag" style={{
                   display: 'inline-block', textAlign: 'center',
                   fontSize: 11, fontWeight: 800, letterSpacing: '0.1em', padding: '5px 0',
                   color: ts.fg, background: ts.bg,
                   border: `1.5px solid ${ts.border}`,
                   fontFamily: 'system-ui, sans-serif',
                 }}>{n.tag}</span>
-                <span style={{ fontSize: 15, fontWeight: 600, color: a2.fg, fontFamily: 'system-ui, sans-serif' }}>{n.title}</span>
-                <span style={{ color: a2.shu, fontSize: 18, fontWeight: 700 }}>→</span>
+                <span className="a2-news-title" style={{ fontSize: 15, fontWeight: 600, color: a2.fg, fontFamily: 'system-ui, sans-serif', lineHeight: 1.45 }}>{n.title}</span>
+                <span className="a2-news-arrow" style={{ color: a2.shu, fontSize: 18, fontWeight: 700 }}>→</span>
               </li>
             );
           })}
