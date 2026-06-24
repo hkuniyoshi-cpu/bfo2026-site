@@ -76,7 +76,11 @@ function useContent(lang) {
     }
     let cancelled = false;
     setData(d => ({ ...d, text: {}, meta: {}, _state: 'loading' }));
-    const fetchUrl = `${url}?action=content&lang=${encodeURIComponent(lang)}`;
+    // キャッシュバスター: 分単位の値を URL に付与
+    // → 同じ分内の重複リクエストはブラウザ/CDN がキャッシュヒット
+    // → 分が変わると新規 URL になり強制的に最新を取得
+    const minuteBucket = Math.floor(Date.now() / 60000);
+    const fetchUrl = `${url}?action=content&lang=${encodeURIComponent(lang)}&_=${minuteBucket}`;
 
     // タイムアウト付き fetch（GAS の cold start で稀に 30s 以上ハングする対策）
     const fetchWithTimeout = (u, ms = 15000) => {

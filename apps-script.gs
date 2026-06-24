@@ -274,7 +274,7 @@ function getContent(lang) {
     },
   };
 
-  cache.put(cacheKey, JSON.stringify(result), 300); // 5分
+  cache.put(cacheKey, JSON.stringify(result), 60); // 60秒（onEdit が失敗しても最大1分で自動更新）
   return result;
 }
 
