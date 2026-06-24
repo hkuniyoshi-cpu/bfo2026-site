@@ -487,9 +487,11 @@ function VideoLauncher({ onClick, lang }) {
 
 function App() {
   const [lang, setLang] = React.useState(detectInitialLang);
-  const todayKey = () => new Date().toISOString().slice(0, 10);
+  // CM動画の自動表示は「初回アクセス時の1回のみ」。
+  // 2回目以降は右下の「CM動画を見る」ボタンから手動で再生可能。
+  const SEEN_KEY = 'bfo_video_seen_ever';
   const [videoOpen, setVideoOpen] = React.useState(() => {
-    try { return localStorage.getItem('bfo_video_seen_date') !== todayKey(); }
+    try { return !localStorage.getItem(SEEN_KEY); }
     catch { return false; }
   });
   React.useEffect(() => {
@@ -497,7 +499,7 @@ function App() {
     document.documentElement.lang = lang;
   }, [lang]);
   const closeVideo = React.useCallback(() => {
-    try { localStorage.setItem('bfo_video_seen_date', todayKey()); } catch {}
+    try { localStorage.setItem(SEEN_KEY, '1'); } catch {}
     setVideoOpen(false);
   }, []);
   return (
