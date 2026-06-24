@@ -862,6 +862,122 @@ function appendEvePartyColumns() {
   );
 }
 
+// ─── 出展企業タブに「屋号・キャッチ・共同出展」列を追加（非破壊・冪等）─
+// 既存の出展企業データを保持したまま、新規9列を末尾に追加する。
+// 追加列:
+//   ブース数 (auto-formula), 屋号, キャッチコピー,
+//   共同1_社名, 共同1_カテゴリ, 共同1_URL,
+//   共同2_社名, 共同2_カテゴリ, 共同2_URL
+// すべて空欄で開始 → アンケート結果を見ながら手動入力。
+// 空欄行はサイトで現状互換表示（後方互換性100%）。
+function appendExhibitorBoothNameColumns() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sh = ss.getSheetByName('出展企業');
+  if (!sh) {
+    SpreadsheetApp.getUi().alert('「出展企業」タブが見つかりません。\n先にスプレッドシート初期化を実行してください。');
+    return;
+  }
+  const headers = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0]
+    .map(h => String(h || '').trim());
+  const newCols = [
+    'ブース数', '屋号', 'キャッチコピー',
+    '共同1_社名', '共同1_カテゴリ', '共同1_URL',
+    '共同2_社名', '共同2_カテゴリ', '共同2_URL',
+  ];
+  const toAdd = newCols.filter(c => headers.indexOf(c) < 0);
+
+  if (toAdd.length === 0) {
+    SpreadsheetApp.getUi().alert('出展企業の拡張列はすべて追加済みです。');
+    return;
+  }
+
+  const startCol = sh.getLastColumn() + 1;
+  sh.getRange(1, startCol, 1, toAdd.length).setValues([toAdd]);
+  sh.getRange(1, startCol, 1, toAdd.length)
+    .setBackground('#1a1612').setFontColor('#ffffff').setFontWeight('bold');
+
+  // 列幅の設定
+  const widths = {
+    'ブース数':       80,
+    '屋号':           220,
+    'キャッチコピー':  280,
+    '共同1_社名':     200,
+    '共同1_カテゴリ': 130,
+    '共同1_URL':     280,
+    '共同2_社名':     200,
+    '共同2_カテゴリ': 130,
+    '共同2_URL':     280,
+  };
+  for (let i = 0; i < toAdd.length; i++) {
+    sh.setColumnWidth(startCol + i, widths[toAdd[i]] || 160);
+  }
+
+  // ブース数列に自動計算式を流し込む（"01・02" → 2、"05" → 1、空欄 → 1）
+  const boothCountIdx = toAdd.indexOf('ブース数');
+  if (boothCountIdx >= 0) {
+    const colLetter = colNumToLetter_(startCol + boothCountIdx);
+    const lastRow = Math.max(2, sh.getLastRow());
+    // ブースNo は C列固定
+    const formulas = [];
+    for (let r = 2; r <= lastRow; r++) {
+      formulas.push([`=IF(C${r}="", 1, COUNTA(SPLIT(C${r}, "・,/、 ")))`]);
+    }
+    if (formulas.length > 0) {
+      sh.getRange(2, startCol + boothCountIdx, formulas.length, 1).setFormulas(formulas);
+      sh.getRange(2, startCol + boothCountIdx, formulas.length, 1)
+        .setHorizontalAlignment('center')
+        .setFontWeight('bold');
+    }
+    sh.getRange(1, startCol + boothCountIdx).setNote(
+      'ブース数 = C列「ブースNo」から自動計算\n' +
+      '・"01" → 1\n' +
+      '・"01・02" → 2\n' +
+      '・"05・06・07" → 3\n' +
+      '値が異なる場合は数式を直接上書き可'
+    );
+  }
+
+  // 屋号列に説明注釈
+  const yagoIdx = toAdd.indexOf('屋号');
+  if (yagoIdx >= 0) {
+    sh.getRange(1, startCol + yagoIdx).setNote(
+      'ブースパネル屋号（アンケートの「ブースパネル屋号」）\n' +
+      '・入力ありの場合: サイトで屋号がメイン表示、クリックで企業情報展開\n' +
+      '・空欄の場合: 従来通り企業名がメイン表示（後方互換）'
+    );
+  }
+
+  // 共同出展列に説明注釈
+  const co1NameIdx = toAdd.indexOf('共同1_社名');
+  if (co1NameIdx >= 0) {
+    sh.getRange(1, startCol + co1NameIdx).setNote(
+      '共同出展の1社目（主企業以外の社名）\n' +
+      'カテゴリ・URL も合わせて入力すると、\n' +
+      'サイトでは「N社共同」バッジ付きで一覧表示されます。'
+    );
+  }
+
+  clearAllCache_();
+  SpreadsheetApp.getUi().alert(
+    `出展企業の拡張列を ${toAdd.length} 件追加しました。\n\n` +
+    '【追加された列】\n' +
+    toAdd.map(c => `・${c}`).join('\n') +
+    '\n\n既存の出展企業データはそのまま保持されています。\n' +
+    '空欄行はサイトで従来通りの表示になります。'
+  );
+}
+
+// 列番号 → アルファベット (1→A, 27→AA)
+function colNumToLetter_(n) {
+  let s = '';
+  while (n > 0) {
+    const m = (n - 1) % 26;
+    s = String.fromCharCode(65 + m) + s;
+    n = Math.floor((n - 1) / 26);
+  }
+  return s;
+}
+
 // ─── 決済URL系の行を「サイト設定」に追加（非破壊・冪等）────────
 // 懇親会・前夜祭の決済 URL / ラベルのうち、未登録のキーのみ末尾に追記。
 function appendEventPaymentSettings() {
@@ -992,6 +1108,7 @@ function onOpen() {
     .addItem('前夜祭の列を追加（既存データ保持）',           'appendEvePartyColumns')
     .addItem('決済URL行を追加（懇親会・前夜祭／既存データ保持）', 'appendEventPaymentSettings')
     .addItem('決済状態にプルダウンを設定（未払→未確認 変換）', 'applyPaymentStatusDropdown')
+    .addItem('出展企業に屋号・共同出展列を追加（既存データ保持）', 'appendExhibitorBoothNameColumns')
     .addSeparator()
     .addItem('キャッシュをクリア（サイト即時反映）', 'clearContentCache')
     .addToUi();

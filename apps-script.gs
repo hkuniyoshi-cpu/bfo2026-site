@@ -218,17 +218,43 @@ function getContent(lang) {
         // ブースNoの先頭にある数値を取得（"14・15" → 14, "01" → 1）
         const boothNum = parseInt(boothRaw.replace(/[^\d].*$/, ''), 10) || 9999;
         const orderRaw = Number(r['並び順']);
+        // ブース数（スプレッドシートの自動式の結果を優先。空ならブースNoから推定）
+        const boothCountRaw = Number(r['ブース数']);
+        const boothCount = (!isNaN(boothCountRaw) && boothCountRaw > 0) ? boothCountRaw
+          : (boothRaw ? boothRaw.split(/[・,\/、\s]+/).filter(s => s.trim()).length || 1 : 1);
+        // 共同出展（同じ屋号の場合 React 側でグループ化に使う）
+        const coExhibitors = [];
+        const co1Name = String(r['共同1_社名'] || '').trim();
+        if (co1Name) {
+          coExhibitors.push({
+            name:     co1Name,
+            category: String(r['共同1_カテゴリ'] || '').trim(),
+            url:      String(r['共同1_URL'] || '').trim(),
+          });
+        }
+        const co2Name = String(r['共同2_社名'] || '').trim();
+        if (co2Name) {
+          coExhibitors.push({
+            name:     co2Name,
+            category: String(r['共同2_カテゴリ'] || '').trim(),
+            url:      String(r['共同2_URL'] || '').trim(),
+          });
+        }
         return {
-          name:      String(r['社名'] || ''),
-          category:  String(r['カテゴリ'] || ''),
-          url:       String(r['URL'] || r['ウェブサイト'] || r['HP'] || ''),
-          booth_no:  boothRaw,
-          booth_num: boothNum,           // ソート用数値
-          order:     isNaN(orderRaw) ? boothNum : orderRaw, // 並び順未設定ならブースNoで代替
+          name:        String(r['社名'] || ''),
+          category:    String(r['カテゴリ'] || ''),
+          url:         String(r['URL'] || r['ウェブサイト'] || r['HP'] || ''),
+          booth_no:    boothRaw,
+          booth_num:   boothNum,           // ソート用数値
+          booth_count: boothCount,         // 1ブースか複数か（合計算出用）
+          // ── 拡張フィールド（空欄なら従来表示にフォールバック） ──
+          booth_name:   String(r['屋号']         || '').trim(),
+          catch_copy:   String(r['キャッチコピー'] || '').trim(),
+          co_exhibitors: coExhibitors,
+          order:        isNaN(orderRaw) ? boothNum : orderRaw,
         };
       })
       .sort((a, b) => {
-        // 1次: order（並び順 or ブースNo先頭数値）、2次: booth_num
         if (a.order !== b.order) return a.order - b.order;
         return a.booth_num - b.booth_num;
       }),

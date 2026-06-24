@@ -964,14 +964,18 @@ function A2Exhibitors({ t, content }) {
   const items = content.exhibitors || [];
   const hasError = content._state === 'error';
 
-  // ブース総数を計算：booth_no が "1・2" や "7,8" のように複数記載の場合は 2 とカウント
-  // 区切り文字: 「・」「、」「,」「/」「空白」
+  // 総ブース数 = booth_count（スプレッドシート自動計算）の合計
+  // フォールバック: booth_no を区切り文字で分割した数
   const totalBooths = React.useMemo(() => {
     if (!items.length) return 70;
     let sum = 0;
     items.forEach(ex => {
+      if (ex.booth_count && ex.booth_count > 0) {
+        sum += Number(ex.booth_count);
+        return;
+      }
       const raw = String(ex.booth_no || '').trim();
-      if (!raw) { sum += 1; return; } // ブース番号が未設定の場合も1ブース扱い
+      if (!raw) { sum += 1; return; }
       const parts = raw.split(/[\/,、・\s]+/).map(s => s.trim()).filter(Boolean);
       sum += Math.max(1, parts.length);
     });
@@ -980,6 +984,7 @@ function A2Exhibitors({ t, content }) {
   const count = totalBooths;
 
   const [activeCategory, setActiveCategory] = React.useState('ALL');
+  const [openIdx, setOpenIdx] = React.useState(null);
 
   const categories = React.useMemo(() => {
     const set = new Set();
@@ -1026,7 +1031,7 @@ function A2Exhibitors({ t, content }) {
                   return (
                     <button
                       key={cat}
-                      onClick={() => setActiveCategory(cat)}
+                      onClick={() => { setActiveCategory(cat); setOpenIdx(null); }}
                       style={{
                         padding: '10px 18px',
                         fontSize: 13,
@@ -1048,106 +1053,244 @@ function A2Exhibitors({ t, content }) {
                 })}
               </div>
             )}
-            <div className="a2-reveal" style={{ marginTop: 16, display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 12 }}>
+            <div className="a2-reveal" style={{ marginTop: 16, display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12 }}>
               {filtered.length === 0 ? (
                 <div style={{ gridColumn: '1 / -1', padding: '48px', textAlign: 'center', color: a2.fgSoft, fontFamily: 'system-ui, sans-serif' }}>
                   該当する企業はありません
                 </div>
               ) : filtered.map((e, i) => {
                 const accent = colorOf(e.category);
-                const Tag = e.url ? 'a' : 'div';
-                const tagProps = e.url ? { href: e.url, target: '_blank', rel: 'noopener noreferrer' } : {};
-                return (
-                  <Tag
-                    key={i}
-                    {...tagProps}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 14,
-                      background: a2.bg,
-                      borderLeft: `4px solid ${accent}`,
-                      border: `1px solid ${a2.border}`,
-                      borderLeftWidth: 4,
-                      padding: '16px 20px',
-                      textDecoration: 'none',
-                      color: a2.fg,
-                      cursor: e.url ? 'pointer' : 'default',
-                      transition: 'transform .25s, box-shadow .25s, border-left-width .25s',
-                      fontFamily: 'system-ui, sans-serif',
-                      minHeight: 64,
-                    }}
-                    onMouseEnter={(ev) => {
-                      ev.currentTarget.style.transform = 'translate(-3px, -3px)';
-                      ev.currentTarget.style.boxShadow = `5px 5px 0 ${a2.fg}`;
-                      ev.currentTarget.style.borderLeftWidth = '8px';
-                    }}
-                    onMouseLeave={(ev) => {
-                      ev.currentTarget.style.transform = 'translate(0, 0)';
-                      ev.currentTarget.style.boxShadow = 'none';
-                      ev.currentTarget.style.borderLeftWidth = '4px';
-                    }}
-                  >
-                    {e.booth_no && (
-                      <div style={{
-                        flexShrink: 0, minWidth: 50, minHeight: 56,
-                        display: 'flex', flexDirection: 'column',
-                        alignItems: 'center', justifyContent: 'center',
-                        background: a2.fg, color: a2.bg,
-                        fontFamily: '"JetBrains Mono", monospace',
-                        padding: '5px 8px 6px',
-                        whiteSpace: 'nowrap',
-                        textAlign: 'center',
-                        gap: 1,
-                      }}>
-                        {/* 「BOOTH」ラベル（番号がブース番号と分かるよう明示） */}
-                        <span style={{
-                          fontSize: 7, fontWeight: 700, letterSpacing: '0.18em',
-                          color: a2.ki, lineHeight: 1, opacity: 0.85,
-                          fontFamily: 'system-ui, sans-serif',
-                        }}>BOOTH</span>
-                        {/* "14・15" のように中点区切りの場合は2行に分けて表示 */}
-                        {e.booth_no.includes('・') ? (
-                          e.booth_no.split('・').map((n, idx, arr) => (
-                            <span key={idx} style={{
-                              display: 'block',
-                              fontSize: idx === 0 ? 14 : 11,
-                              fontWeight: 800,
-                              lineHeight: 1.15,
-                              letterSpacing: '0.02em',
-                              opacity: idx === 0 ? 1 : 0.78,
-                            }}>
-                              {idx === 0 ? n : `・${n}`}
-                            </span>
-                          ))
-                        ) : (
-                          <span style={{ fontSize: 16, fontWeight: 800, letterSpacing: '0.04em', lineHeight: 1.1 }}>
-                            {e.booth_no}
-                          </span>
-                        )}
-                      </div>
-                    )}
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 15, fontWeight: 700, color: a2.fg, lineHeight: 1.3, marginBottom: 4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {e.name}
-                      </div>
-                      {e.category && (
-                        <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', color: accent, textTransform: 'uppercase' }}>
-                          ◆ {e.category}
-                        </div>
-                      )}
-                    </div>
-                    {e.url && (
-                      <div style={{ fontSize: 16, color: accent, fontWeight: 800, flexShrink: 0 }}>↗</div>
-                    )}
-                  </Tag>
-                );
+                const coEx = Array.isArray(e.co_exhibitors) ? e.co_exhibitors : [];
+                // 屋号が入力されていれば新デザイン（展開型）、なければ従来表示（リンク型）
+                const hasBoothName = !!(e.booth_name && e.booth_name.trim());
+                const isOpen = openIdx === i;
+                if (hasBoothName) {
+                  return (
+                    <ExhibitorExpandable
+                      key={i} e={e} coEx={coEx} accent={accent}
+                      isOpen={isOpen}
+                      onToggle={() => setOpenIdx(isOpen ? null : i)}
+                    />
+                  );
+                }
+                return <ExhibitorLegacy key={i} e={e} accent={accent} />;
               })}
             </div>
           </>
         )}
       </div>
     </section>
+  );
+}
+
+// 屋号メイン表示・クリックで企業情報展開（共同出展対応）
+function ExhibitorExpandable({ e, coEx, accent, isOpen, onToggle }) {
+  const totalCompanies = 1 + coEx.length;
+  const isMulti = totalCompanies >= 2;
+  return (
+    <div
+      style={{
+        background: a2.bg,
+        borderLeft: `4px solid ${accent}`,
+        border: `1px solid ${a2.border}`,
+        borderLeftWidth: 4,
+        padding: '16px 20px',
+        color: a2.fg,
+        cursor: 'pointer',
+        transition: 'transform .25s, box-shadow .25s, border-left-width .25s',
+        fontFamily: 'system-ui, sans-serif',
+      }}
+      onClick={onToggle}
+      role="button"
+      aria-expanded={isOpen}
+      tabIndex={0}
+      onKeyDown={(ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); onToggle(); } }}
+      onMouseEnter={(ev) => {
+        ev.currentTarget.style.transform = 'translate(-3px, -3px)';
+        ev.currentTarget.style.boxShadow = `5px 5px 0 ${a2.fg}`;
+        ev.currentTarget.style.borderLeftWidth = '8px';
+      }}
+      onMouseLeave={(ev) => {
+        ev.currentTarget.style.transform = 'translate(0, 0)';
+        ev.currentTarget.style.boxShadow = 'none';
+        ev.currentTarget.style.borderLeftWidth = '4px';
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
+        {e.booth_no && <BoothBadge boothNo={e.booth_no} />}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+            <span style={{
+              fontSize: 17, fontWeight: 800, color: a2.fg, lineHeight: 1.25,
+              fontFamily: '"Noto Serif JP", serif', letterSpacing: '-0.01em',
+            }}>{e.booth_name}</span>
+            {isMulti && (
+              <span style={{
+                fontSize: 10, fontWeight: 800, letterSpacing: '0.08em',
+                padding: '2px 8px', background: a2.midori, color: '#fff',
+                fontFamily: 'system-ui, sans-serif',
+              }}>{totalCompanies}社共同</span>
+            )}
+          </div>
+          {e.catch_copy && (
+            <div style={{
+              fontSize: 11, color: a2.fgSoft, marginTop: 4, fontStyle: 'italic',
+              lineHeight: 1.45, overflow: 'hidden',
+            }}>{e.catch_copy}</div>
+          )}
+          <div style={{
+            fontSize: 10, fontWeight: 700, letterSpacing: '0.1em',
+            color: a2.fgSoft, marginTop: 8,
+            display: 'flex', alignItems: 'center', gap: 4,
+          }}>
+            <span style={{ fontSize: 11 }}>{isOpen ? '▲' : '▼'}</span>
+            {isOpen ? '閉じる' : (isMulti ? `クリックで出店企業${totalCompanies}社を表示` : 'クリックで運営企業を表示')}
+          </div>
+        </div>
+      </div>
+      {isOpen && (
+        <div style={{
+          marginTop: 14, paddingTop: 14,
+          borderTop: `1px dashed ${a2.border}`,
+        }}>
+          <div style={{
+            fontSize: 10, fontWeight: 700, letterSpacing: '0.18em',
+            color: a2.fgSoft, marginBottom: 8,
+          }}>{isMulti ? `出店企業（${totalCompanies}社）` : '出店企業'}</div>
+          <ExhibitorCompanyRow e={{ name: e.name, category: e.category, url: e.url }} accent={accent} primary />
+          {coEx.map((c, j) => (
+            <ExhibitorCompanyRow key={j} e={c} accent={accent} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// 展開時に表示する企業の1行
+function ExhibitorCompanyRow({ e, accent, primary }) {
+  const hasUrl = !!(e.url && e.url.trim());
+  const Tag = hasUrl ? 'a' : 'div';
+  const tagProps = hasUrl ? { href: e.url, target: '_blank', rel: 'noopener noreferrer', onClick: (ev) => ev.stopPropagation() } : {};
+  return (
+    <Tag
+      {...tagProps}
+      style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '10px 0', textDecoration: 'none', color: a2.fg,
+        borderBottom: `0.5px solid ${a2.border}`,
+        cursor: hasUrl ? 'pointer' : 'default',
+      }}
+    >
+      <div style={{ minWidth: 0 }}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: a2.fg, lineHeight: 1.3 }}>
+          {e.name}
+        </div>
+        {e.category && (
+          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', color: accent, marginTop: 2 }}>
+            ◆ {e.category}
+          </div>
+        )}
+      </div>
+      {hasUrl ? (
+        <span style={{ fontSize: 14, color: accent, fontWeight: 800, flexShrink: 0, marginLeft: 8 }}>↗</span>
+      ) : (
+        <span style={{ fontSize: 10, color: a2.fgSoft, letterSpacing: '0.1em', flexShrink: 0, marginLeft: 8 }}>URL 未公開</span>
+      )}
+    </Tag>
+  );
+}
+
+// 屋号が未入力時の従来表示（現状互換）
+function ExhibitorLegacy({ e, accent }) {
+  const Tag = e.url ? 'a' : 'div';
+  const tagProps = e.url ? { href: e.url, target: '_blank', rel: 'noopener noreferrer' } : {};
+  return (
+    <Tag
+      {...tagProps}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 14,
+        background: a2.bg,
+        borderLeft: `4px solid ${accent}`,
+        border: `1px solid ${a2.border}`,
+        borderLeftWidth: 4,
+        padding: '16px 20px',
+        textDecoration: 'none',
+        color: a2.fg,
+        cursor: e.url ? 'pointer' : 'default',
+        transition: 'transform .25s, box-shadow .25s, border-left-width .25s',
+        fontFamily: 'system-ui, sans-serif',
+        minHeight: 64,
+      }}
+      onMouseEnter={(ev) => {
+        ev.currentTarget.style.transform = 'translate(-3px, -3px)';
+        ev.currentTarget.style.boxShadow = `5px 5px 0 ${a2.fg}`;
+        ev.currentTarget.style.borderLeftWidth = '8px';
+      }}
+      onMouseLeave={(ev) => {
+        ev.currentTarget.style.transform = 'translate(0, 0)';
+        ev.currentTarget.style.boxShadow = 'none';
+        ev.currentTarget.style.borderLeftWidth = '4px';
+      }}
+    >
+      {e.booth_no && <BoothBadge boothNo={e.booth_no} />}
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontSize: 15, fontWeight: 700, color: a2.fg, lineHeight: 1.3, marginBottom: 4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          {e.name}
+        </div>
+        {e.category && (
+          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', color: accent, textTransform: 'uppercase' }}>
+            ◆ {e.category}
+          </div>
+        )}
+      </div>
+      {e.url && (
+        <div style={{ fontSize: 16, color: accent, fontWeight: 800, flexShrink: 0 }}>↗</div>
+      )}
+    </Tag>
+  );
+}
+
+// BOOTH 番号バッジ（既存ロジックを共通化）
+function BoothBadge({ boothNo }) {
+  if (!boothNo) return null;
+  const isMulti = boothNo.includes('・');
+  return (
+    <div style={{
+      flexShrink: 0, minWidth: 50, minHeight: 56,
+      display: 'flex', flexDirection: 'column',
+      alignItems: 'center', justifyContent: 'center',
+      background: a2.fg, color: a2.bg,
+      fontFamily: '"JetBrains Mono", monospace',
+      padding: '5px 8px 6px',
+      whiteSpace: 'nowrap',
+      textAlign: 'center',
+      gap: 1,
+    }}>
+      <span style={{
+        fontSize: 7, fontWeight: 700, letterSpacing: '0.18em',
+        color: a2.ki, lineHeight: 1, opacity: 0.85,
+        fontFamily: 'system-ui, sans-serif',
+      }}>BOOTH</span>
+      {isMulti ? boothNo.split('・').map((n, idx) => (
+        <span key={idx} style={{
+          display: 'block',
+          fontSize: idx === 0 ? 14 : 11,
+          fontWeight: 800,
+          lineHeight: 1.15,
+          letterSpacing: '0.02em',
+          opacity: idx === 0 ? 1 : 0.78,
+        }}>
+          {idx === 0 ? n : `・${n}`}
+        </span>
+      )) : (
+        <span style={{ fontSize: 16, fontWeight: 800, letterSpacing: '0.04em', lineHeight: 1.1 }}>
+          {boothNo}
+        </span>
+      )}
+    </div>
   );
 }
 function truncate(s, n) { return s.length > n ? s.slice(0, n) + '…' : s; }
