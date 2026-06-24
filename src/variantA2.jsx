@@ -868,10 +868,19 @@ function normalizeTime(s) {
 
 // ─── タイムテーブル ───
 function A2Schedule({ t, content }) {
-  // スプレッドシートに公開行があればそれを使う、なければ translations.jsx のフォールバック
-  const rawItems = (content && content.schedule && content.schedule.length > 0)
-    ? content.schedule
-    : (t.schedule.items || []);
+  // データ取得状態の判定
+  const isLoading = content && (content._state === 'loading' || content._state === 'unconfigured');
+  const isError = content && content._state === 'error';
+  const hasContentSchedule = content && content.schedule && content.schedule.length > 0;
+
+  // スプレッドシート優先、未到達/失敗時のみ translations.jsx のフォールバック使用
+  //   ready かつ スプレッドシートにデータあり → スプレッドシート
+  //   ready かつ スプレッドシート空           → translations.jsx フォールバック
+  //   loading                                → 空配列（スケルトン表示）
+  //   error                                  → translations.jsx フォールバック
+  const rawItems = isLoading
+    ? []
+    : (hasContentSchedule ? content.schedule : (t.schedule.items || []));
   const items = rawItems.map(it => ({ ...it, time: normalizeTime(it.time) }));
 
   // コンテンツがスプレッドシートから動的に追加されるため、
@@ -917,7 +926,24 @@ function A2Schedule({ t, content }) {
         </div>
         <div style={{ marginTop: 48, position: 'relative' }}>
           <div style={{ position: 'absolute', left: 134, top: 30, bottom: 30, width: 2, background: `linear-gradient(180deg, transparent 0%, ${a2.shu} 10%, ${a2.shu} 90%, transparent 100%)` }} />
-          {items.map((item, i) => (
+          {isLoading && Array.from({ length: 5 }).map((_, i) => (
+            <div key={`skel-${i}`} className="a2-schedule-row" style={{
+              display: 'grid', gridTemplateColumns: 'minmax(110px, 130px) 30px 1fr',
+              alignItems: 'center', gap: 20, padding: '22px 0',
+            }}>
+              <div className="a2-skel" style={{ height: 30, width: 110, marginLeft: 'auto', opacity: 0.3 }} />
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <div style={{
+                  width: 16, height: 16, borderRadius: '50%',
+                  background: a2.fgSoft, opacity: 0.4,
+                  boxShadow: `0 0 0 4px ${a2.bgSoft}, 0 0 0 5px ${a2.border}`,
+                  zIndex: 2,
+                }} />
+              </div>
+              <div className="a2-skel" style={{ height: 72, opacity: 0.3, border: `1px solid ${a2.border}` }} />
+            </div>
+          ))}
+          {!isLoading && items.map((item, i) => (
             <div key={i} className="a2-reveal a2-schedule-row" style={{
               display: 'grid', gridTemplateColumns: 'minmax(110px, 130px) 30px 1fr',
               alignItems: 'center', gap: 20, padding: '22px 0',
