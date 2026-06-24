@@ -998,9 +998,10 @@ function A2Video({ t, content }) {
 function A2Exhibitors({ t, content }) {
   const items = content.exhibitors || [];
   const hasError = content._state === 'error';
+  const isLoading = content._state === 'loading' || content._state === 'unconfigured';
 
   // 総ブース数 = 出展行数（1行=1ブース枠）
-  const count = items.length || 70;
+  const count = items.length;
 
   const [activeCategory, setActiveCategory] = React.useState('ALL');
   const [openIdx, setOpenIdx] = React.useState(null);
@@ -1051,16 +1052,16 @@ function A2Exhibitors({ t, content }) {
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         <div className="a2-reveal" style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 24, marginBottom: 8 }}>
           <SectionTitleA2 en="EXHIBITORS" ja={t.exhibitors.title} accent={a2.midori} />
-          <div style={{ textAlign: 'right', lineHeight: 1 }}>
+          <div style={{ textAlign: 'right', lineHeight: 1, minHeight: 110 }}>
             {/* メイン: 企業数（強調表示） */}
             <div className="a2-shimmer-text a2-exhibitors-count" style={{ fontSize: 96, fontWeight: 900, lineHeight: 1, fontFamily: '"JetBrains Mono", monospace' }}>
-              {companyCount > 0 ? companyCount : count}
+              {isLoading ? <span style={{ opacity: 0.25, letterSpacing: '0.05em' }}>—</span> : (companyCount > 0 ? companyCount : '—')}
             </div>
             <div style={{ fontSize: 13, fontWeight: 800, letterSpacing: '0.2em', color: a2.midori, fontFamily: 'system-ui, sans-serif', marginTop: 4 }}>
               企業出展
             </div>
-            {/* サブ: ブース数 */}
-            {count > 0 && (
+            {/* サブ: ブース数（ロード中は非表示） */}
+            {!isLoading && count > 0 && (
               <div style={{
                 marginTop: 8, fontSize: 11, fontWeight: 700, letterSpacing: '0.12em',
                 color: a2.fgSoft, fontFamily: 'system-ui, sans-serif',
@@ -1133,7 +1134,15 @@ function A2Exhibitors({ t, content }) {
               </div>
             )}
             <div className="a2-reveal a2-exhibitors-grid" style={{ marginTop: 12, display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12 }}>
-              {filtered.length === 0 ? (
+              {isLoading ? (
+                // ロード中: スケルトン6枚
+                Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="a2-skel" style={{
+                    height: 92, opacity: 0.35,
+                    borderLeft: `4px solid ${a2.fgSoft}`, border: `1px solid ${a2.border}`,
+                  }} />
+                ))
+              ) : filtered.length === 0 ? (
                 <div style={{ gridColumn: '1 / -1', padding: '48px', textAlign: 'center', color: a2.fgSoft, fontFamily: 'system-ui, sans-serif' }}>
                   該当する企業はありません
                 </div>
