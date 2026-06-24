@@ -149,10 +149,23 @@ const A2_CSS = `
   .a2-access-map { aspect-ratio: 4/3 !important; }
 
   /* ── 出展企業 カウント数字 ── */
-  .a2-exhibitors-count { font-size: 64px !important; }
+  .a2-exhibitors-count { font-size: 56px !important; }
 
   /* ── 出展企業セクションだけタイトル直下を詰める ── */
-  #exhibitors { padding-top: 24px !important; padding-bottom: 60px !important; }
+  #exhibitors { padding-top: 16px !important; padding-bottom: 60px !important; }
+  #exhibitors .a2-exhibitors-grid { margin-top: 8px !important; }
+  #exhibitors h2.a2-section-h2 { font-size: 32px !important; }
+  /* モバイルでカテゴリボタンを横スクロール 1 行表示に */
+  #exhibitors .a2-exhibitors-cats {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    margin-left: -20px;
+    margin-right: -20px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  #exhibitors .a2-exhibitors-cats button { flex-shrink: 0; padding: 8px 14px !important; font-size: 12px !important; }
+  #exhibitors .a2-exhibitors-cats::-webkit-scrollbar { display: none; }
 
   /* ── ヴェニューレイアウト ブースインデックス ── */
   .a2-booth-index { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important; }
@@ -995,7 +1008,6 @@ function A2Exhibitors({ t, content }) {
   // 共同企業カウントから除外するもの:
   //   ・空白 / プレースホルダ（無、なし、未定 等）
   //   ・1セルに複数社名が連結されたエントリ（/ と 、両方含む場合）
-  //   ・カテゴリ（業種）が空欄のエントリ（施設名・地名等の非企業を除外）
   const PLACEHOLDER_RE = /^(無|なし|無し|未定|未確認|-|—|N\/A|NA|TBD)$/i;
   const companyCount = React.useMemo(() => {
     let total = items.length;
@@ -1003,15 +1015,12 @@ function A2Exhibitors({ t, content }) {
       if (!Array.isArray(e.co_exhibitors)) return;
       e.co_exhibitors.forEach(c => {
         const n = (c && c.name || '').trim();
-        const cat = (c && c.category || '').trim();
         if (!n) return;
         if (PLACEHOLDER_RE.test(n)) return;
         // 複数社連結セルは除外（編集側で分割が必要）
         const hasSlash = /[\/／]/.test(n);
         const hasComma = /[、,]/.test(n);
         if (hasSlash && hasComma) return;
-        // カテゴリ空欄も除外（施設名・地名など非企業の可能性が高い）
-        if (!cat) return;
         total += 1;
       });
     });
@@ -1021,21 +1030,23 @@ function A2Exhibitors({ t, content }) {
   return (
     <section id="exhibitors" style={{ padding: '24px 36px 100px', background: a2.bg, scrollMarginTop: 80 }}>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-        <div className="a2-reveal" style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 24 }}>
+        <div className="a2-reveal" style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 24, marginBottom: 8 }}>
           <SectionTitleA2 en="EXHIBITORS" ja={t.exhibitors.title} accent={a2.midori} />
-          <div style={{ textAlign: 'right' }}>
+          <div style={{ textAlign: 'right', lineHeight: 1 }}>
+            {/* メイン: 企業数（強調表示） */}
             <div className="a2-shimmer-text a2-exhibitors-count" style={{ fontSize: 96, fontWeight: 900, lineHeight: 1, fontFamily: '"JetBrains Mono", monospace' }}>
-              {count}
+              {companyCount > 0 ? companyCount : count}
             </div>
-            <div style={{ fontSize: 13, fontWeight: 700, letterSpacing: '0.2em', color: a2.fgSoft, fontFamily: 'system-ui, sans-serif' }}>
-              {t.exhibitors.countLabel}
+            <div style={{ fontSize: 13, fontWeight: 800, letterSpacing: '0.2em', color: a2.midori, fontFamily: 'system-ui, sans-serif', marginTop: 4 }}>
+              企業出展
             </div>
-            {companyCount > 0 && (
+            {/* サブ: ブース数 */}
+            {count > 0 && (
               <div style={{
-                marginTop: 6, fontSize: 12, fontWeight: 700, letterSpacing: '0.08em',
-                color: a2.fg, fontFamily: 'system-ui, sans-serif',
+                marginTop: 8, fontSize: 11, fontWeight: 700, letterSpacing: '0.12em',
+                color: a2.fgSoft, fontFamily: 'system-ui, sans-serif',
               }}>
-                <span style={{ color: a2.midori, fontWeight: 900 }}>{companyCount}</span> 企業出展
+                <span style={{ color: a2.fg, fontWeight: 800 }}>{count}</span> {t.exhibitors.countLabel}
               </div>
             )}
           </div>
@@ -1062,7 +1073,19 @@ function A2Exhibitors({ t, content }) {
         ) : (
           <>
             {categories.length > 1 && (
-              <div className="a2-reveal" style={{ marginTop: 20, display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+              <div
+                className="a2-reveal a2-exhibitors-cats"
+                style={{
+                  marginTop: 12,
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: 8,
+                  overflowX: 'auto',
+                  WebkitOverflowScrolling: 'touch',
+                  scrollbarWidth: 'thin',
+                  paddingBottom: 4,
+                }}
+              >
                 {categories.map(cat => {
                   const isActive = activeCategory === cat;
                   return (
@@ -1090,7 +1113,7 @@ function A2Exhibitors({ t, content }) {
                 })}
               </div>
             )}
-            <div className="a2-reveal" style={{ marginTop: 16, display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12 }}>
+            <div className="a2-reveal a2-exhibitors-grid" style={{ marginTop: 12, display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12 }}>
               {filtered.length === 0 ? (
                 <div style={{ gridColumn: '1 / -1', padding: '48px', textAlign: 'center', color: a2.fgSoft, fontFamily: 'system-ui, sans-serif' }}>
                   該当する企業はありません
@@ -2619,8 +2642,21 @@ function A2News({ t, content }) {
 }
 
 // ─── Zoom 事前説明会（動的） ───
+// 時刻範囲の区切り文字を「〜」に統一する
+// 元データ: "12:00-13:00" "12:00∼13:00" "12:00~13:00" "12:00～13:00" などを
+// すべて "12:00〜13:00" に正規化
+function normalizeTimeRange(s) {
+  if (!s) return '';
+  return String(s)
+    .replace(/[~∼〜～–—‐-―−]/g, '〜')
+    .replace(/\s*-\s*/g, '〜')
+    .replace(/〜+/g, '〜');
+}
+
 function A2Zoom({ t, content }) {
-  const items = content.zoom || [];
+  const itemsRaw = content.zoom || [];
+  // 時刻表記を統一
+  const items = itemsRaw.map(it => ({ ...it, time: normalizeTimeRange(it.time) }));
   const loading = content._state === 'loading';
   const error = content._state === 'error';
   const empty = content._state === 'ready' && items.length === 0;
