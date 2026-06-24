@@ -1007,8 +1007,28 @@ function A2Exhibitors({ t, content }) {
     return categoryColors[(idx - 1 + categoryColors.length) % categoryColors.length];
   };
 
-  // 企業数 = items.length（共同出展含まない主企業の数）
-  const companyCount = items.length;
+  // 企業数 = 主企業 + 共同出展企業
+  // 共同企業カウントから除外するもの:
+  //   ・空白 / プレースホルダ（無、なし、未定 等）
+  //   ・1セルに複数社名が連結されたエントリ（/ と 、両方含む場合）
+  const PLACEHOLDER_RE = /^(無|なし|無し|未定|未確認|-|—|N\/A|NA|TBD)$/i;
+  const companyCount = React.useMemo(() => {
+    let total = items.length;
+    items.forEach(e => {
+      if (!Array.isArray(e.co_exhibitors)) return;
+      e.co_exhibitors.forEach(c => {
+        const n = (c && c.name || '').trim();
+        if (!n) return;
+        if (PLACEHOLDER_RE.test(n)) return;
+        // 複数社連結セルは除外（編集側で分割が必要）
+        const hasSlash = /[\/／]/.test(n);
+        const hasComma = /[、,]/.test(n);
+        if (hasSlash && hasComma) return;
+        total += 1;
+      });
+    });
+    return total;
+  }, [items]);
 
   return (
     <section id="exhibitors" style={{ padding: '24px 36px 100px', background: a2.bg, scrollMarginTop: 80 }}>
