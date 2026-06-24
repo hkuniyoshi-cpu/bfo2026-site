@@ -59,13 +59,44 @@ function deepMerge(base, override) {
   return result;
 }
 
+// localStorage キャッシュ（stale-while-revalidate パターン）
+// 前回取得した GAS レスポンスを最大24時間保存し、2回目以降の訪問で即時表示。
+// バックグラウンドで最新を取得して差分があれば更新（ユーザー体感としてフレッシュ）。
+const CONTENT_CACHE_PREFIX = 'bfo_content_cache_v1_';
+const CONTENT_CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24h
+
+function loadCachedContent(lang) {
+  try {
+    const raw = localStorage.getItem(CONTENT_CACHE_PREFIX + lang);
+    if (!raw) return null;
+    const obj = JSON.parse(raw);
+    if (!obj || !obj._cachedAt) return null;
+    if (Date.now() - obj._cachedAt > CONTENT_CACHE_TTL_MS) return null;
+    return obj.data;
+  } catch { return null; }
+}
+function saveCachedContent(lang, data) {
+  try {
+    localStorage.setItem(CONTENT_CACHE_PREFIX + lang, JSON.stringify({
+      _cachedAt: Date.now(), data,
+    }));
+  } catch { /* QuotaExceeded など無視 */ }
+}
+
 // Apps Script Web App から動的コンテンツを取得
 function useContent(lang) {
-  const [data, setData] = React.useState({
-    news: [], zoom: [], exhibitors: [],
-    schedule: [], marquee: [], restaurants: [],
-    venueZones: {}, text: {}, meta: {}, settings: {},
-    _state: 'loading',
+  const [data, setData] = React.useState(() => {
+    // 起動時に localStorage キャッシュがあれば即時表示
+    const cached = loadCachedContent(lang);
+    if (cached) {
+      return { ...cached, _state: 'ready', _fromCache: true };
+    }
+    return {
+      news: [], zoom: [], exhibitors: [],
+      schedule: [], marquee: [], restaurants: [],
+      venueZones: {}, text: {}, meta: {}, settings: {},
+      _state: 'loading',
+    };
   });
   React.useEffect(() => {
     const url = window.CONFIG && window.CONFIG.WEB_APP_URL;
@@ -75,7 +106,13 @@ function useContent(lang) {
       return;
     }
     let cancelled = false;
-    setData(d => ({ ...d, text: {}, meta: {}, _state: 'loading' }));
+    // 言語が切り替わった場合、新言語のキャッシュがあればまずそれを表示
+    const cached = loadCachedContent(lang);
+    if (cached) {
+      setData({ ...cached, _state: 'ready', _fromCache: true });
+    } else {
+      setData(d => ({ ...d, text: {}, meta: {}, _state: 'loading' }));
+    }
     // キャッシュバスター: 分単位の値を URL に付与
     // → 同じ分内の重複リクエストはブラウザ/CDN がキャッシュヒット
     // → 分が変わると新規 URL になり強制的に最新を取得
@@ -100,6 +137,8 @@ function useContent(lang) {
         if (cancelled) return;
         console.log('✓ useContent: 取得成功');
         setData({ ...json, _state: 'ready' });
+        // 次回訪問時の即時表示用に localStorage に保存
+        saveCachedContent(lang, json);
         // 日本語ロード完了後、他言語を裏でプリウォーム
         if (lang === 'ja') {
           ['en', 'zh', 'ko'].forEach(l => {
