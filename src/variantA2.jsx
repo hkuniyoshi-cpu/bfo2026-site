@@ -2708,10 +2708,15 @@ function normalizeTimeRange(s) {
     .replace(/〜+/g, '〜');
 }
 
+// Zoom交流会の申込みフォームURL（サイト設定の zoom_cta_url で上書き可能）
+const ZOOM_CTA_DEFAULT_URL = 'https://forms.gle/By1NNzwt8JC5Bxau5';
+
 function A2Zoom({ t, content }) {
   const itemsRaw = content.zoom || [];
   // 時刻表記を統一
   const items = itemsRaw.map(it => ({ ...it, time: normalizeTimeRange(it.time) }));
+  // CTA URL: サイト設定の zoom_cta_url 優先、なければデフォルト
+  const ctaUrl = (content.settings && content.settings.zoom_cta_url) || ZOOM_CTA_DEFAULT_URL;
   const loading = content._state === 'loading';
   const error = content._state === 'error';
   const empty = content._state === 'ready' && items.length === 0;
@@ -2776,8 +2781,8 @@ function A2Zoom({ t, content }) {
               : <div key={i}>{card}</div>;
           })}
         </div>
-        {items.length > 0 && items[0].url && (
-          <a href={items[0].url} target="_blank" rel="noopener" style={{
+        {items.length > 0 && (
+          <a href={ctaUrl} target="_blank" rel="noopener" style={{
             display: 'inline-flex', alignItems: 'center', gap: 14,
             background: a2.ki, color: a2.fg,
             padding: '20px 40px', fontSize: 16, fontWeight: 900,

@@ -30,6 +30,8 @@ function useTranslation(lang, content) {
   const PROTECTED = {
     hero: ['cta', 'ctaSub', 'ctaSubFree', 'ctaLimit'],
     cta:  ['btn', 'sub', 'subFree', 'limit'],
+    // zoom セクションは固定文言（説明会→交流会 等の変更を translations.jsx で一元管理）
+    zoom: ['enLabel', 'title', 'lead', 'cta', 'empty'],
   };
   Object.keys(PROTECTED).forEach(section => {
     if (merged[section] && base[section]) {

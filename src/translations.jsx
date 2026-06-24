@@ -65,11 +65,11 @@ const I18N = {
       enLabel: "NEWS", title: "お知らせ", moreLabel: "一覧を見る", empty: "お知らせはありません",
     },
     zoom: {
-      enLabel: "PRE-EVENT BRIEFING",
-      title: "事前Zoom説明会",
-      lead: "初参加の方も安心。開催前にBNI沖縄メンバーがイベントの趣旨と参加のコツをご説明します。",
-      cta: "Zoom説明会に申し込む",
-      empty: "現在、予定されている説明会はありません",
+      enLabel: "PRE-EVENT MEETUP",
+      title: "事前Zoom交流会",
+      lead: "初参加の方も安心。開催前にBNI沖縄メンバーと出展者・参加者が交流し、当日の楽しみ方や参加のコツをお伝えします。",
+      cta: "Zoom交流会に申し込む",
+      empty: "現在、予定されている交流会はありません",
     },
     restaurants: {
       enLabel: "BNI MEMBER SERVICES",
@@ -161,9 +161,9 @@ const I18N = {
       enLabel: "NEWS", title: "News", moreLabel: "View all", empty: "No news yet",
     },
     zoom: {
-      enLabel: "PRE-EVENT BRIEFING", title: "Pre-event Zoom Briefing",
-      lead: "First-time guests welcome. BNI Okinawa members will walk you through what to expect.",
-      cta: "Reserve a Zoom slot", empty: "No briefings scheduled at the moment",
+      enLabel: "PRE-EVENT MEETUP", title: "Pre-event Zoom Meetup",
+      lead: "First-time guests welcome. Network with BNI Okinawa members, exhibitors, and other attendees before the main event.",
+      cta: "Sign up for Zoom Meetup", empty: "No meetups scheduled at the moment",
     },
     restaurants: {
       enLabel: "BNI MEMBER SERVICES", title: "BNI Okinawa Member Services",
@@ -250,9 +250,9 @@ const I18N = {
       enLabel: "NEWS", title: "最新消息", moreLabel: "查看全部", empty: "目前沒有消息",
     },
     zoom: {
-      enLabel: "PRE-EVENT BRIEFING", title: "事前 Zoom 說明會",
-      lead: "首次參加也安心。沖繩BNI成員將為您介紹活動重點。",
-      cta: "報名 Zoom 說明會", empty: "目前沒有預定的說明會",
+      enLabel: "PRE-EVENT MEETUP", title: "事前 Zoom 交流會",
+      lead: "首次參加也安心。活動前與沖繩BNI成員、出展者及參加者線上交流，分享活動亮點與參加訣竅。",
+      cta: "報名 Zoom 交流會", empty: "目前沒有預定的交流會",
     },
     restaurants: {
       enLabel: "BNI MEMBER SERVICES", title: "沖繩BNI會員服務一覽",
@@ -339,9 +339,9 @@ const I18N = {
       enLabel: "NEWS", title: "소식", moreLabel: "전체 보기", empty: "공지사항이 없습니다",
     },
     zoom: {
-      enLabel: "PRE-EVENT BRIEFING", title: "사전 Zoom 설명회",
-      lead: "첫 참가도 안심. BNI 오키나와 멤버가 이벤트 취지와 참가 팁을 안내합니다.",
-      cta: "Zoom 설명회 신청", empty: "현재 예정된 설명회가 없습니다",
+      enLabel: "PRE-EVENT MEETUP", title: "사전 Zoom 교류회",
+      lead: "첫 참가도 안심. 행사 전 BNI 오키나와 멤버, 출전자, 참가자와 온라인으로 교류하며 행사 즐기는 법과 참가 팁을 공유합니다.",
+      cta: "Zoom 교류회 신청", empty: "현재 예정된 교류회가 없습니다",
     },
     restaurants: {
       enLabel: "BNI MEMBER SERVICES", title: "오키나와 BNI 멤버 서비스 목록",
