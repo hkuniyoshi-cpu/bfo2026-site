@@ -967,24 +967,8 @@ function A2Exhibitors({ t, content }) {
   const items = content.exhibitors || [];
   const hasError = content._state === 'error';
 
-  // 総ブース数 = booth_count（スプレッドシート自動計算）の合計
-  // フォールバック: booth_no を区切り文字で分割した数
-  const totalBooths = React.useMemo(() => {
-    if (!items.length) return 70;
-    let sum = 0;
-    items.forEach(ex => {
-      if (ex.booth_count && ex.booth_count > 0) {
-        sum += Number(ex.booth_count);
-        return;
-      }
-      const raw = String(ex.booth_no || '').trim();
-      if (!raw) { sum += 1; return; }
-      const parts = raw.split(/[\/,、・\s]+/).map(s => s.trim()).filter(Boolean);
-      sum += Math.max(1, parts.length);
-    });
-    return sum;
-  }, [items]);
-  const count = totalBooths;
+  // 総ブース数 = 出展行数（1行=1ブース枠）
+  const count = items.length || 70;
 
   const [activeCategory, setActiveCategory] = React.useState('ALL');
   const [openIdx, setOpenIdx] = React.useState(null);
@@ -1011,6 +995,7 @@ function A2Exhibitors({ t, content }) {
   // 共同企業カウントから除外するもの:
   //   ・空白 / プレースホルダ（無、なし、未定 等）
   //   ・1セルに複数社名が連結されたエントリ（/ と 、両方含む場合）
+  //   ・カテゴリ（業種）が空欄のエントリ（施設名・地名等の非企業を除外）
   const PLACEHOLDER_RE = /^(無|なし|無し|未定|未確認|-|—|N\/A|NA|TBD)$/i;
   const companyCount = React.useMemo(() => {
     let total = items.length;
@@ -1018,12 +1003,15 @@ function A2Exhibitors({ t, content }) {
       if (!Array.isArray(e.co_exhibitors)) return;
       e.co_exhibitors.forEach(c => {
         const n = (c && c.name || '').trim();
+        const cat = (c && c.category || '').trim();
         if (!n) return;
         if (PLACEHOLDER_RE.test(n)) return;
         // 複数社連結セルは除外（編集側で分割が必要）
         const hasSlash = /[\/／]/.test(n);
         const hasComma = /[、,]/.test(n);
         if (hasSlash && hasComma) return;
+        // カテゴリ空欄も除外（施設名・地名など非企業の可能性が高い）
+        if (!cat) return;
         total += 1;
       });
     });
