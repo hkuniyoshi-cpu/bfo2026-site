@@ -75,35 +75,46 @@ function useContent(lang) {
       return;
     }
     let cancelled = false;
-    // 言語切替時に旧言語の text/meta をリセット。
-    // これにより useTranslation が translations.jsx ベースを即時表示し、
-    // 旧言語テキストが新言語 UI に混入するのを防ぐ。
     setData(d => ({ ...d, text: {}, meta: {}, _state: 'loading' }));
     const fetchUrl = `${url}?action=content&lang=${encodeURIComponent(lang)}`;
-    console.log('📡 useContent: コンテンツ取得中...', fetchUrl);
-    fetch(fetchUrl)
-      .then(r => {
+
+    // タイムアウト付き fetch（GAS の cold start で稀に 30s 以上ハングする対策）
+    const fetchWithTimeout = (u, ms = 15000) => {
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), ms);
+      return fetch(u, { signal: ctrl.signal }).finally(() => clearTimeout(t));
+    };
+
+    // リトライ付き取得（指数バックオフ: 1s, 3s, 6s）
+    const attemptFetch = async (attempt = 0) => {
+      const maxAttempts = 3;
+      try {
+        console.log(`📡 useContent: 取得中 (attempt ${attempt + 1}/${maxAttempts})`, fetchUrl);
+        const r = await fetchWithTimeout(fetchUrl);
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        return r.json();
-      })
-      .then(json => {
-        if (!cancelled) {
-          console.log('✓ useContent: 取得成功', json);
-          setData({ ...json, _state: 'ready' });
-          // 日本語ロード完了後、他言語を裏でプリウォーム。
-          // GAS 側の翻訳キャッシュ（LanguageApp）を温めておくことで、
-          // ユーザーが言語を切り替えた際に即時表示できる。
-          if (lang === 'ja') {
-            ['en', 'zh', 'ko'].forEach(l => {
-              fetch(`${url}?action=content&lang=${encodeURIComponent(l)}`).catch(() => {});
-            });
-          }
+        const json = await r.json();
+        if (cancelled) return;
+        console.log('✓ useContent: 取得成功');
+        setData({ ...json, _state: 'ready' });
+        // 日本語ロード完了後、他言語を裏でプリウォーム
+        if (lang === 'ja') {
+          ['en', 'zh', 'ko'].forEach(l => {
+            fetchWithTimeout(`${url}?action=content&lang=${encodeURIComponent(l)}`, 15000).catch(() => {});
+          });
         }
-      })
-      .catch(err => {
-        console.error('✕ useContent: エラー', err);
-        if (!cancelled) setData(d => ({ ...d, _state: 'error', _error: String(err) }));
-      });
+      } catch (err) {
+        if (cancelled) return;
+        console.warn(`✕ useContent: attempt ${attempt + 1} failed`, err);
+        if (attempt + 1 < maxAttempts) {
+          const wait = [1000, 3000, 6000][attempt] || 6000;
+          setTimeout(() => { if (!cancelled) attemptFetch(attempt + 1); }, wait);
+        } else {
+          console.error('✕ useContent: 全試行失敗', err);
+          setData(d => ({ ...d, _state: 'error', _error: String(err) }));
+        }
+      }
+    };
+    attemptFetch(0);
     return () => { cancelled = true; };
   }, [lang]);
   return data;

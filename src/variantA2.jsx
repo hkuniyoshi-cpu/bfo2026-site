@@ -151,6 +151,9 @@ const A2_CSS = `
   /* ── 出展企業 カウント数字 ── */
   .a2-exhibitors-count { font-size: 64px !important; }
 
+  /* ── 出展企業セクションだけタイトル直下を詰める ── */
+  #exhibitors { padding-top: 24px !important; padding-bottom: 60px !important; }
+
   /* ── ヴェニューレイアウト ブースインデックス ── */
   .a2-booth-index { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important; }
 
@@ -1004,8 +1007,11 @@ function A2Exhibitors({ t, content }) {
     return categoryColors[(idx - 1 + categoryColors.length) % categoryColors.length];
   };
 
+  // 企業数 = items.length（共同出展含まない主企業の数）
+  const companyCount = items.length;
+
   return (
-    <section id="exhibitors" style={{ padding: '40px 36px 100px', background: a2.bg, scrollMarginTop: 80 }}>
+    <section id="exhibitors" style={{ padding: '24px 36px 100px', background: a2.bg, scrollMarginTop: 80 }}>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         <div className="a2-reveal" style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 24 }}>
           <SectionTitleA2 en="EXHIBITORS" ja={t.exhibitors.title} accent={a2.midori} />
@@ -1016,11 +1022,34 @@ function A2Exhibitors({ t, content }) {
             <div style={{ fontSize: 13, fontWeight: 700, letterSpacing: '0.2em', color: a2.fgSoft, fontFamily: 'system-ui, sans-serif' }}>
               {t.exhibitors.countLabel}
             </div>
+            {companyCount > 0 && (
+              <div style={{
+                marginTop: 6, fontSize: 12, fontWeight: 700, letterSpacing: '0.08em',
+                color: a2.fg, fontFamily: 'system-ui, sans-serif',
+              }}>
+                <span style={{ color: a2.midori, fontWeight: 900 }}>{companyCount}</span> 企業出展
+              </div>
+            )}
           </div>
         </div>
         {hasError ? (
-          <div style={{ marginTop: 24, padding: '28px', background: '#fef2f2', border: `1.5px solid ${a2.shu}`, color: a2.shu, fontWeight: 700, fontSize: 13, textAlign: 'center', fontFamily: 'system-ui, sans-serif' }}>
-            ⚠ 出展企業情報が取得できません。Web App URL をご確認ください。
+          <div style={{
+            marginTop: 16, padding: '20px 24px',
+            background: '#fef2f2', border: `1.5px solid ${a2.shu}`,
+            color: a2.shu, fontWeight: 700, fontSize: 13,
+            textAlign: 'center', fontFamily: 'system-ui, sans-serif',
+            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12,
+          }}>
+            <div>⚠ 出展企業情報を取得できませんでした</div>
+            <button
+              onClick={() => window.location.reload()}
+              style={{
+                padding: '8px 20px', fontSize: 12, fontWeight: 800,
+                background: a2.shu, color: '#fff', border: 'none',
+                cursor: 'pointer', letterSpacing: '0.08em',
+                fontFamily: 'system-ui, sans-serif',
+              }}
+            >再読み込み</button>
           </div>
         ) : (
           <>
