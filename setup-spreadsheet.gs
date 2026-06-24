@@ -915,12 +915,11 @@ function appendExhibitorBoothNameColumns() {
   // ブース数列に自動計算式を流し込む（"01・02" → 2、"05" → 1、空欄 → 1）
   const boothCountIdx = toAdd.indexOf('ブース数');
   if (boothCountIdx >= 0) {
-    const colLetter = colNumToLetter_(startCol + boothCountIdx);
     const lastRow = Math.max(2, sh.getLastRow());
-    // ブースNo は C列固定
+    // 参照元: H列（運営用ブース番号メモ。C列は公開時のみ入力）
     const formulas = [];
     for (let r = 2; r <= lastRow; r++) {
-      formulas.push([`=IF(C${r}="", 1, COUNTA(SPLIT(C${r}, "・,/、 ")))`]);
+      formulas.push([`=IF(H${r}="", 1, COUNTA(SPLIT(H${r}, "・,/、 ")))`]);
     }
     if (formulas.length > 0) {
       sh.getRange(2, startCol + boothCountIdx, formulas.length, 1).setFormulas(formulas);
@@ -929,11 +928,12 @@ function appendExhibitorBoothNameColumns() {
         .setFontWeight('bold');
     }
     sh.getRange(1, startCol + boothCountIdx).setNote(
-      'ブース数 = C列「ブースNo」から自動計算\n' +
+      'ブース数 = H列「運営用メモ」から自動計算\n' +
       '・"01" → 1\n' +
       '・"01・02" → 2\n' +
       '・"05・06・07" → 3\n' +
-      '値が異なる場合は数式を直接上書き可'
+      '※ C列（ブースNo）はサイトに表示する公開用。\n' +
+      '   公開準備が整うまで C は空、H にメモ書きで運用。'
     );
   }
 
