@@ -880,7 +880,7 @@ function appendExhibitorBoothNameColumns() {
   const headers = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0]
     .map(h => String(h || '').trim());
   const newCols = [
-    'ブース数', '屋号', 'キャッチコピー',
+    'ブース数', 'ブース名', 'キャッチコピー',
     '共同1_社名', '共同1_カテゴリ', '共同1_URL',
     '共同2_社名', '共同2_カテゴリ', '共同2_URL',
   ];
@@ -899,7 +899,7 @@ function appendExhibitorBoothNameColumns() {
   // 列幅の設定
   const widths = {
     'ブース数':       80,
-    '屋号':           220,
+    'ブース名':           220,
     'キャッチコピー':  280,
     '共同1_社名':     200,
     '共同1_カテゴリ': 130,
@@ -938,7 +938,7 @@ function appendExhibitorBoothNameColumns() {
   }
 
   // 屋号列に説明注釈
-  const yagoIdx = toAdd.indexOf('屋号');
+  const yagoIdx = toAdd.indexOf('ブース名');
   if (yagoIdx >= 0) {
     sh.getRange(1, startCol + yagoIdx).setNote(
       'ブースパネル屋号（アンケートの「ブースパネル屋号」）\n' +

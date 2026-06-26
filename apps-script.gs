@@ -248,7 +248,8 @@ function getContent(lang) {
           booth_num:   boothNum,           // ソート用数値
           booth_count: boothCount,         // 1ブースか複数か（合計算出用）
           // ── 拡張フィールド（空欄なら従来表示にフォールバック） ──
-          booth_name:   String(r['屋号']         || '').trim(),
+          // 列名は「ブース名」または「屋号」のどちらでも可（後方互換）
+          booth_name:   String(r['ブース名'] || r['屋号'] || '').trim(),
           catch_copy:   String(r['キャッチコピー'] || '').trim(),
           co_exhibitors: coExhibitors,
           order:        isNaN(orderRaw) ? boothNum : orderRaw,
