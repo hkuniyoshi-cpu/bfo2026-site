@@ -493,47 +493,56 @@ function A2Nav({ lang, onLangChange, t, onLogoClick }) {
           )}
         </div>
 
-        {/* LINE ボタン（申込ボタンと高さ・装飾を統一） */}
+        {/* LINE ボタン（モバイル時はアイコンのみコンパクト表示） */}
         <a href="https://line.me/R/ti/p/@744geuzz" target="_blank" rel="noopener noreferrer"
            className="a2-nav-line-btn"
            title="BFO公式LINEで問い合わせ"
            style={{
-             display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-             height: 40, padding: '0 16px', boxSizing: 'border-box',
+             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+             gap: isMobile ? 0 : 6,
+             height: isMobile ? 36 : 40,
+             padding: isMobile ? '0 8px' : '0 16px',
+             boxSizing: 'border-box',
              background: '#06C755', color: '#ffffff',
              textDecoration: 'none', fontSize: 13, fontWeight: 700, letterSpacing: '0.04em',
-             border: `1.5px solid ${a2.fg}`, boxShadow: `4px 4px 0 ${a2.fg}`,
+             border: `1.5px solid ${a2.fg}`,
+             boxShadow: isMobile ? `2px 2px 0 ${a2.fg}` : `4px 4px 0 ${a2.fg}`,
              transition: 'transform .2s, box-shadow .2s', fontFamily: 'system-ui, sans-serif',
            }}
-           onMouseEnter={(e) => { e.currentTarget.style.transform = 'translate(-2px,-2px)'; e.currentTarget.style.boxShadow = `6px 6px 0 ${a2.fg}`; }}
-           onMouseLeave={(e) => { e.currentTarget.style.transform = 'translate(0,0)'; e.currentTarget.style.boxShadow = `4px 4px 0 ${a2.fg}`; }}>
-          <img src="assets/BFOOFLINE.png" alt="LINE" style={{ height: 18, display: 'block' }} />
-          <span>LINE</span>
+           onMouseEnter={(e) => { if (!isMobile) { e.currentTarget.style.transform = 'translate(-2px,-2px)'; e.currentTarget.style.boxShadow = `6px 6px 0 ${a2.fg}`; } }}
+           onMouseLeave={(e) => { if (!isMobile) { e.currentTarget.style.transform = 'translate(0,0)'; e.currentTarget.style.boxShadow = `4px 4px 0 ${a2.fg}`; } }}>
+          <img src="assets/BFOOFLINE.png" alt="LINE" style={{ height: isMobile ? 16 : 18, display: 'block' }} />
+          {!isMobile && <span>LINE</span>}
         </a>
 
-        {/* 申込ボタン（LINE ボタンと高さ・装飾を統一） */}
-        <a href="register.html" className="a2-btn-shu a2-nav-register-btn" style={{
-          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-          height: 40, padding: '0 20px', boxSizing: 'border-box',
-          background: a2.shu, color: a2.bg, border: `1.5px solid ${a2.fg}`,
-          fontSize: 13, fontWeight: 700, cursor: 'pointer',
-          letterSpacing: '0.04em', boxShadow: `4px 4px 0 ${a2.fg}`,
-          fontFamily: 'system-ui, sans-serif', textDecoration: 'none',
-          whiteSpace: 'nowrap',
-        }}>{t.nav.tickets} →</a>
+        {/* 申込ボタン（モバイル時は非表示・ハンバーガーメニュー内に導線あり） */}
+        {!isMobile && (
+          <a href="register.html" className="a2-btn-shu a2-nav-register-btn" style={{
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            height: 40, padding: '0 20px', boxSizing: 'border-box',
+            background: a2.shu, color: a2.bg, border: `1.5px solid ${a2.fg}`,
+            fontSize: 13, fontWeight: 700, cursor: 'pointer',
+            letterSpacing: '0.04em', boxShadow: `4px 4px 0 ${a2.fg}`,
+            fontFamily: 'system-ui, sans-serif', textDecoration: 'none',
+            whiteSpace: 'nowrap',
+          }}>{t.nav.tickets} →</a>
+        )}
 
-        {/* ハンバーガーボタン（モバイルのみ） */}
-        <button className="a2-nav-hamburger" onClick={() => setMobileOpen(o => !o)}
-          aria-label="メニュー" aria-expanded={mobileOpen}
-          style={{
-            flexDirection: 'column', justifyContent: 'center', gap: 5,
-            width: 38, height: 38, background: 'transparent',
-            border: `1.5px solid ${a2.fg}`, cursor: 'pointer', padding: '7px 8px',
-          }}>
-          <span style={{ display: 'block', width: '100%', height: 2, background: a2.fg, transition: 'all .25s', transform: mobileOpen ? 'translateY(7px) rotate(45deg)' : 'none' }} />
-          <span style={{ display: 'block', width: '100%', height: 2, background: a2.fg, transition: 'all .25s', opacity: mobileOpen ? 0 : 1 }} />
-          <span style={{ display: 'block', width: '100%', height: 2, background: a2.fg, transition: 'all .25s', transform: mobileOpen ? 'translateY(-7px) rotate(-45deg)' : 'none' }} />
-        </button>
+        {/* ハンバーガーボタン（モバイルのみ表示） */}
+        {isMobile && (
+          <button className="a2-nav-hamburger" onClick={() => setMobileOpen(o => !o)}
+            aria-label="メニュー" aria-expanded={mobileOpen}
+            style={{
+              display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 5,
+              width: 34, height: 34, background: 'transparent',
+              border: `1.5px solid ${a2.fg}`, cursor: 'pointer', padding: '6px 7px',
+              flexShrink: 0,
+            }}>
+            <span style={{ display: 'block', width: '100%', height: 2, background: a2.fg, transition: 'all .25s', transform: mobileOpen ? 'translateY(7px) rotate(45deg)' : 'none' }} />
+            <span style={{ display: 'block', width: '100%', height: 2, background: a2.fg, transition: 'all .25s', opacity: mobileOpen ? 0 : 1 }} />
+            <span style={{ display: 'block', width: '100%', height: 2, background: a2.fg, transition: 'all .25s', transform: mobileOpen ? 'translateY(-7px) rotate(-45deg)' : 'none' }} />
+          </button>
+        )}
       </nav>
 
       {/* モバイルメニューパネル */}
