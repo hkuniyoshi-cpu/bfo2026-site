@@ -112,11 +112,17 @@ const A2_CSS = `
 
 @media (max-width: 767px) {
   /* ── ナビ ── */
+  :root { --a2-nav-py: 10px; --a2-nav-px: 10px; --a2-nav-gap: 6px; }
   .a2-nav-links    { display: none !important; }
-  .a2-nav-hamburger { display: flex !important; }
+  .a2-nav-hamburger { display: flex !important; width: 34px !important; height: 34px !important; padding: 6px !important; }
+  .a2-nav-line-btn { padding: 0 8px !important; gap: 0 !important; height: 36px !important; box-shadow: 2px 2px 0 #1a1612 !important; }
   .a2-nav-line-btn span { display: none; }   /* LINE テキスト非表示 */
   .a2-nav-lang-label   { display: none !important; } /* 言語名テキスト非表示・🌐+▼のみ表示 */
-  .a2-nav-lang button  { padding: 0 12px !important; gap: 6px !important; } /* コンパクト化 */
+  .a2-nav-lang button  { padding: 0 10px !important; gap: 4px !important; } /* コンパクト化 */
+  /* 申込ボタンは上部ナビでは非表示（ハンバーガーメニュー内に導線あり + ヒーロー大CTA有り） */
+  .a2-nav-register-btn { display: none !important; }
+  /* ロゴ隣のブランド文言をやや小さく */
+  nav.a2-nav > div:first-child > div:last-child { font-size: 11px !important; }
 
   /* ── セクション共通パディング ── */
   section { padding-top: 64px !important; padding-bottom: 80px !important;
@@ -353,6 +359,20 @@ function A2Nav({ lang, onLangChange, t, onLogoClick }) {
   const [scrolled, setScrolled] = React.useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [langOpen, setLangOpen] = React.useState(false);
+  // モバイル判定（≤767px）
+  const [isMobile, setIsMobile] = React.useState(
+    typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches
+  );
+  React.useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)');
+    const onChange = (e) => setIsMobile(e.matches);
+    if (mq.addEventListener) mq.addEventListener('change', onChange);
+    else mq.addListener(onChange);
+    return () => {
+      if (mq.removeEventListener) mq.removeEventListener('change', onChange);
+      else mq.removeListener(onChange);
+    };
+  }, []);
 
   // 言語ドロップダウン：外側クリックで閉じる
   React.useEffect(() => {
@@ -387,14 +407,14 @@ function A2Nav({ lang, onLangChange, t, onLogoClick }) {
     background: scrolled ? 'rgba(255,255,255,0.97)' : 'rgba(255,255,255,0.8)',
     backdropFilter: 'blur(14px)',
     borderBottom: scrolled ? `1px solid ${a2.border}` : `1px solid transparent`,
-    padding: '14px 36px',
-    display: 'flex', alignItems: 'center', gap: 24,
+    padding: isMobile ? '10px 10px' : '14px 36px',
+    display: 'flex', alignItems: 'center', gap: isMobile ? 6 : 24,
     transition: 'all .3s',
   };
 
   return (
     <>
-      <nav style={navStyle}>
+      <nav className="a2-nav" style={navStyle}>
         {/* ロゴ */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
           <img src="assets/bni-logo.png" style={{ height: 24, display: 'block', transition: 'transform .3s', cursor: 'pointer' }} alt="BNI"
@@ -492,13 +512,14 @@ function A2Nav({ lang, onLangChange, t, onLogoClick }) {
         </a>
 
         {/* 申込ボタン（LINE ボタンと高さ・装飾を統一） */}
-        <a href="register.html" className="a2-btn-shu" style={{
+        <a href="register.html" className="a2-btn-shu a2-nav-register-btn" style={{
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
           height: 40, padding: '0 20px', boxSizing: 'border-box',
           background: a2.shu, color: a2.bg, border: `1.5px solid ${a2.fg}`,
           fontSize: 13, fontWeight: 700, cursor: 'pointer',
           letterSpacing: '0.04em', boxShadow: `4px 4px 0 ${a2.fg}`,
           fontFamily: 'system-ui, sans-serif', textDecoration: 'none',
+          whiteSpace: 'nowrap',
         }}>{t.nav.tickets} →</a>
 
         {/* ハンバーガーボタン（モバイルのみ） */}
