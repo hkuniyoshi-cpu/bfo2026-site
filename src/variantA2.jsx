@@ -106,21 +106,14 @@ const A2_CSS = `
    モバイル対応 (≤ 767px)
    ============================================= */
 .a2-nav-links    { display: flex; }
-.a2-nav-hamburger { display: none !important; }
+/* ハンバーガーは isMobile 判定で条件レンダリング（CSS で display 制御しない） */
 .a2-mobile-menu  { display: none; }
 .a2-mobile-menu.open { display: flex !important; }
 
 @media (max-width: 767px) {
   /* ── ナビ ── */
-  :root { --a2-nav-py: 10px; --a2-nav-px: 10px; --a2-nav-gap: 6px; }
+  /* nav 内要素のサイズは JS 側の isMobile 判定で inline style に直接反映（CSS !important が React inline style を上書きできない挙動対策） */
   .a2-nav-links    { display: none !important; }
-  .a2-nav-hamburger { display: flex !important; width: 34px !important; height: 34px !important; padding: 6px !important; }
-  .a2-nav-line-btn { padding: 0 8px !important; gap: 0 !important; height: 36px !important; box-shadow: 2px 2px 0 #1a1612 !important; }
-  .a2-nav-line-btn span { display: none; }   /* LINE テキスト非表示 */
-  .a2-nav-lang-label   { display: none !important; } /* 言語名テキスト非表示・🌐+▼のみ表示 */
-  .a2-nav-lang button  { padding: 0 10px !important; gap: 4px !important; } /* コンパクト化 */
-  /* 申込ボタンは上部ナビでは非表示（ハンバーガーメニュー内に導線あり + ヒーロー大CTA有り） */
-  .a2-nav-register-btn { display: none !important; }
   /* ロゴ隣のブランド文言をやや小さく */
   nav.a2-nav > div:first-child > div:last-child { font-size: 11px !important; }
 
@@ -450,20 +443,24 @@ function A2Nav({ lang, onLangChange, t, onLogoClick }) {
             onClick={() => setLangOpen(o => !o)}
             aria-haspopup="listbox" aria-expanded={langOpen} aria-label="言語選択 / Language"
             style={{
-              display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
-              height: 40, padding: '0 14px', boxSizing: 'border-box',
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+              gap: isMobile ? 3 : 7,
+              height: isMobile ? 36 : 40,
+              padding: isMobile ? '0 8px' : '0 14px',
+              boxSizing: 'border-box',
               background: a2.bg, color: a2.fg,
-              border: `1.5px solid ${a2.fg}`, boxShadow: `4px 4px 0 ${a2.fg}`,
+              border: `1.5px solid ${a2.fg}`,
+              boxShadow: isMobile ? `2px 2px 0 ${a2.fg}` : `4px 4px 0 ${a2.fg}`,
               cursor: 'pointer', fontSize: 13, fontWeight: 700, letterSpacing: '0.03em',
               fontFamily: 'system-ui, sans-serif', transition: 'transform .2s, box-shadow .2s',
               whiteSpace: 'nowrap', flexShrink: 0,
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translate(-2px,-2px)'; e.currentTarget.style.boxShadow = `6px 6px 0 ${a2.fg}`; }}
-            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translate(0,0)'; e.currentTarget.style.boxShadow = `4px 4px 0 ${a2.fg}`; }}>
-            <span aria-hidden="true" style={{ fontSize: 15, lineHeight: 1, flexShrink: 0 }}>🌐</span>
-            <span className="a2-nav-lang-label" style={{ whiteSpace: 'nowrap' }}>{currentLang.label}</span>
+            onMouseEnter={(e) => { if (!isMobile) { e.currentTarget.style.transform = 'translate(-2px,-2px)'; e.currentTarget.style.boxShadow = `6px 6px 0 ${a2.fg}`; } }}
+            onMouseLeave={(e) => { if (!isMobile) { e.currentTarget.style.transform = 'translate(0,0)'; e.currentTarget.style.boxShadow = `4px 4px 0 ${a2.fg}`; } }}>
+            <span aria-hidden="true" style={{ fontSize: isMobile ? 14 : 15, lineHeight: 1, flexShrink: 0 }}>🌐</span>
+            {!isMobile && <span className="a2-nav-lang-label" style={{ whiteSpace: 'nowrap' }}>{currentLang.label}</span>}
             <span aria-hidden="true" style={{
-              fontSize: 9, lineHeight: 1, flexShrink: 0,
+              fontSize: isMobile ? 8 : 9, lineHeight: 1, flexShrink: 0,
               transform: langOpen ? 'rotate(180deg)' : 'none', transition: 'transform .2s',
             }}>▼</span>
           </button>
@@ -528,14 +525,15 @@ function A2Nav({ lang, onLangChange, t, onLogoClick }) {
           }}>{t.nav.tickets} →</a>
         )}
 
-        {/* ハンバーガーボタン（モバイルのみ表示） */}
+        {/* ハンバーガーボタン（モバイルのみ表示・言語/LINEと高さ・装飾統一） */}
         {isMobile && (
           <button className="a2-nav-hamburger" onClick={() => setMobileOpen(o => !o)}
             aria-label="メニュー" aria-expanded={mobileOpen}
             style={{
               display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 5,
-              width: 34, height: 34, background: 'transparent',
-              border: `1.5px solid ${a2.fg}`, cursor: 'pointer', padding: '6px 7px',
+              width: 36, height: 36, background: a2.bg,
+              border: `1.5px solid ${a2.fg}`, boxShadow: `2px 2px 0 ${a2.fg}`,
+              cursor: 'pointer', padding: '7px 8px', boxSizing: 'border-box',
               flexShrink: 0,
             }}>
             <span style={{ display: 'block', width: '100%', height: 2, background: a2.fg, transition: 'all .25s', transform: mobileOpen ? 'translateY(7px) rotate(45deg)' : 'none' }} />
