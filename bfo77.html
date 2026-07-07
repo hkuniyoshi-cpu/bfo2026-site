@@ -217,16 +217,35 @@ function startScanner() {
     });
 }
 
+// QRデコード結果を正規化（改行/空白/全角ハイフン等の混入を除去）
+function normalizeParticipantId(raw) {
+  if (raw == null) return '';
+  let s = String(raw);
+  // ゼロ幅文字/BOM を除去
+  s = s.replace(/[​-‍﻿]/g, '');
+  // 前後の空白・改行・タブを除去
+  s = s.trim();
+  // 全角ハイフン系（－ ‐ ‑ ‒ – — ―）を半角 - に統一
+  s = s.replace(/[‐-―－]/g, '-');
+  // 半角スペースをすべて除去（ID内に空白は入らない前提）
+  s = s.replace(/\s+/g, '');
+  // URL 形式の場合、参加者ID部分だけ抽出（例: https://.../checkin?id=BFO2026-013）
+  const m = s.match(/BFO2026-\d+/i);
+  if (m) return m[0].toUpperCase();
+  return s;
+}
+
 function onScanSuccess(decoded) {
+  const cleaned = normalizeParticipantId(decoded);
   const now = Date.now();
-  if (decoded === lastScanned && now - lastScannedAt < 3000) return; // 連続スキャン抑止
-  lastScanned = decoded;
+  if (cleaned === lastScanned && now - lastScannedAt < 3000) return; // 連続スキャン抑止
+  lastScanned = cleaned;
   lastScannedAt = now;
-  doCheckin(decoded);
+  doCheckin(cleaned);
 }
 
 document.getElementById('manual-submit').addEventListener('click', () => {
-  const v = document.getElementById('manual-id').value.trim();
+  const v = normalizeParticipantId(document.getElementById('manual-id').value);
   if (v) { doCheckin(v); document.getElementById('manual-id').value = ''; }
 });
 document.getElementById('manual-id').addEventListener('keydown', e => {

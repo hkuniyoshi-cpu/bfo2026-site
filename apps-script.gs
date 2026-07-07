@@ -609,8 +609,28 @@ function evePartyCheckin(participantId) {
   return markCheckin(participantId, 'eve_party_checked_in', 'eve_party_checked_in_at');
 }
 
+// 参加者IDを正規化（サーバー側で防御的にクリーンアップ）
+// クライアント側が古い/壊れたデータを送ってきても救う
+function normalizeParticipantId_(raw) {
+  if (raw == null) return '';
+  var s = String(raw);
+  // ゼロ幅文字/BOM を除去
+  s = s.replace(/[​-‍﻿]/g, '');
+  // 前後の空白・改行・タブを除去
+  s = s.trim();
+  // 全角ハイフン系（－ ‐ ‑ ‒ – — ―）を半角 - に統一
+  s = s.replace(/[‐-―－]/g, '-');
+  // 内部の空白を除去（ID内に空白は入らない前提）
+  s = s.replace(/\s+/g, '');
+  // 大文字化（BFO2026 プレフィックスを正規化）
+  s = s.toUpperCase();
+  return s;
+}
+
 function markCheckin(participantId, statusCol, atCol) {
   if (!participantId) throw new Error('participant_id が必要です');
+  var pid = normalizeParticipantId_(participantId);
+  if (!pid) throw new Error('participant_id が必要です');
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sh = ss.getSheetByName(TAB_PARTICIPANTS);
   const headers = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0];
@@ -624,17 +644,18 @@ function markCheckin(participantId, statusCol, atCol) {
   const last = sh.getLastRow();
   const ids = sh.getRange(2, idCol + 1, last - 1, 1).getValues();
   for (let i = 0; i < ids.length; i++) {
-    if (String(ids[i][0]) === String(participantId)) {
+    // シート側の値も同じ正規化を通す（表記ゆれ吸収）
+    if (normalizeParticipantId_(ids[i][0]) === pid) {
       const rowNum = i + 2;
       const cur = sh.getRange(rowNum, stCol + 1).getValue();
       const already = String(cur).trim() === '済';
       sh.getRange(rowNum, stCol + 1).setValue('済');
       sh.getRange(rowNum, tsCol + 1).setValue(new Date());
       const name = nameCol >= 0 ? sh.getRange(rowNum, nameCol + 1).getValue() : '';
-      return { ok: true, participant_id: participantId, name: String(name), already: already };
+      return { ok: true, participant_id: pid, name: String(name), already: already };
     }
   }
-  return { ok: false, error: 'participant_id が見つかりません', participant_id: participantId };
+  return { ok: false, error: 'participant_id が見つかりません', participant_id: pid };
 }
 
 // ─── 懇親会／前夜祭の参加意思フラグ (POST action=mark_party_intent) ───
@@ -729,6 +750,7 @@ function getStats() {
 
 function lookup(participantId) {
   if (!participantId) return { ok: false, error: 'participant_id が必要です' };
+  var pid = normalizeParticipantId_(participantId);
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sh = ss.getSheetByName(TAB_PARTICIPANTS);
   const headers = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0];
@@ -737,8 +759,7 @@ function lookup(participantId) {
   if (last < 2) return { ok: false, error: 'データなし' };
   const rows = sh.getRange(2, 1, last - 1, headers.length).getValues();
   for (const row of rows) {
-    if (String(row[idCol]) === String(participantId)) {
-      // レスポンスは内部キー（英語）で統一（フロント側との互換性のため）
+    if (normalizeParticipantId_(row[idCol]) === pid) {
       const obj = {};
       headers.forEach((h, i) => {
         const key = headerToInternal_(h);
@@ -747,7 +768,7 @@ function lookup(participantId) {
       return { ok: true, participant: obj };
     }
   }
-  return { ok: false, error: 'participant_id が見つかりません' };
+  return { ok: false, error: 'participant_id が見つかりません', queried: pid };
 }
 
 // ─── ヘルパー ────────────────────────────────────────────────
