@@ -71,7 +71,7 @@
   .result.err .icon { color: var(--shu); }
   .result .who { font-family: "Noto Serif JP", serif; font-size: 22px; font-weight: 900; margin-bottom: 4px; }
   .result .pid { font-family: "JetBrains Mono", monospace; font-size: 13px; color: var(--fg-soft); letter-spacing: 0.05em; }
-  .result .msg { font-size: 13px; margin-top: 6px; font-weight: 700; }
+  .result .msg { font-size: 13px; margin-top: 6px; font-weight: 700; white-space: pre-wrap; word-break: break-all; text-align: left; }
   .result .x { position: absolute; top: 8px; right: 12px; cursor: pointer; font-size: 18px; color: var(--fg-soft); }
 
   /* PIN gate */
@@ -285,6 +285,12 @@ function showResult(j, id) {
     cls = 'err'; icon = '✕';
     who = '見つかりません';
     msg = (j.error || '') + ' (' + id + ')';
+    // デバッグ情報が付いていれば画面に表示（原因調査用）
+    if (j.debug) {
+      const d = j.debug;
+      const sheetIds = (d.sheet_sample || []).map(s => `${s.raw} → 正規化: ${s.norm}`).join(' / ');
+      msg += `\n[DEBUG]\n受信: "${d.queried_raw}"\n正規化後: "${d.queried_normalized}" (${d.queried_length}文字)\n文字コード: [${(d.queried_charcodes||[]).join(',')}]\nID列インデックス: ${d.sheet_id_column_index}\nシート先頭5件: ${sheetIds}`;
+    }
   } else if (j.already) {
     cls = 'dup'; icon = '⚠';
     who = j.name || j.participant_id;
