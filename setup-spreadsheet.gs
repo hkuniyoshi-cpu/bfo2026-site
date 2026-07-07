@@ -826,6 +826,49 @@ function applyPaymentStatusDropdown() {
 
 // ─── 参加者タブに前夜祭4列を追加（非破壊・冪等）─────────────
 // 既存の参加者データ（行）は一切触らず、未登録の列のみ末尾に追加する。
+// ─── チェックイン系の列を「参加者」に追加（非破壊・冪等）────────
+// 既に列がある場合はスキップ、無い列のみ末尾に追加。
+// これが無いとチェックインシステムが「必要な列が不足しています」で失敗する。
+function appendCheckinColumns() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sh = ss.getSheetByName('参加者');
+  if (!sh) {
+    SpreadsheetApp.getUi().alert('「参加者」タブが見つかりません。');
+    return;
+  }
+  const headers = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0]
+    .map(h => String(h || '').trim());
+  const newCols = [
+    'チェックイン', 'チェックイン日時',
+    '懇親会チェックイン', '懇親会チェックイン日時',
+    '前夜祭参加', '前夜祭決済状態',
+    '前夜祭チェックイン', '前夜祭チェックイン日時',
+  ];
+  const toAdd = newCols.filter(c => headers.indexOf(c) < 0);
+
+  if (toAdd.length === 0) {
+    SpreadsheetApp.getUi().alert('チェックイン系の列はすべて追加済みです。');
+    return;
+  }
+
+  const startCol = sh.getLastColumn() + 1;
+  sh.getRange(1, startCol, 1, toAdd.length).setValues([toAdd]);
+  sh.getRange(1, startCol, 1, toAdd.length)
+    .setBackground('#1a1612').setFontColor('#ffffff').setFontWeight('bold');
+  for (let i = 0; i < toAdd.length; i++) {
+    const w = toAdd[i].indexOf('日時') >= 0 ? 190 : 130;
+    sh.setColumnWidth(startCol + i, w);
+  }
+
+  clearAllCache_();
+  SpreadsheetApp.getUi().alert(
+    `チェックイン系の列を ${toAdd.length} 件追加しました:\n` +
+    toAdd.map(c => '・' + c).join('\n') +
+    '\n\n既存の参加者データはそのまま保持されています。\n' +
+    'これで bfo77.html のチェックインが動作します。'
+  );
+}
+
 function appendEvePartyColumns() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sh = ss.getSheetByName('参加者');
@@ -1105,6 +1148,7 @@ function onOpen() {
     )
     .addSeparator()
     .addItem('Producer セクション行を追加（既存データ保持）', 'appendProducerRowsToSiteContent')
+    .addItem('チェックイン系の列を追加（既存データ保持）',   'appendCheckinColumns')
     .addItem('前夜祭の列を追加（既存データ保持）',           'appendEvePartyColumns')
     .addItem('決済URL行を追加（懇親会・前夜祭／既存データ保持）', 'appendEventPaymentSettings')
     .addItem('決済状態にプルダウンを設定（未払→未確認 変換）', 'applyPaymentStatusDropdown')
