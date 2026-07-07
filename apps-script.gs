@@ -643,9 +643,13 @@ function markCheckin(participantId, statusCol, atCol) {
 
   const last = sh.getLastRow();
   const ids = sh.getRange(2, idCol + 1, last - 1, 1).getValues();
+  const seen = []; // デバッグ用
   for (let i = 0; i < ids.length; i++) {
+    const rawSheetId = ids[i][0];
+    const normSheetId = normalizeParticipantId_(rawSheetId);
+    if (i < 5) seen.push({ raw: String(rawSheetId), norm: normSheetId }); // 先頭5件だけ返す
     // シート側の値も同じ正規化を通す（表記ゆれ吸収）
-    if (normalizeParticipantId_(ids[i][0]) === pid) {
+    if (normSheetId === pid) {
       const rowNum = i + 2;
       const cur = sh.getRange(rowNum, stCol + 1).getValue();
       const already = String(cur).trim() === '済';
@@ -655,7 +659,20 @@ function markCheckin(participantId, statusCol, atCol) {
       return { ok: true, participant_id: pid, name: String(name), already: already };
     }
   }
-  return { ok: false, error: 'participant_id が見つかりません', participant_id: pid };
+  // 見つからない場合、デバッグ情報を返す（先頭5件のシート値と比較用）
+  return {
+    ok: false,
+    error: 'participant_id が見つかりません',
+    debug: {
+      queried_raw: String(participantId),
+      queried_normalized: pid,
+      queried_length: pid.length,
+      queried_charcodes: pid.split('').map(c => c.charCodeAt(0)),
+      sheet_id_column_index: idCol,
+      sheet_total_rows: ids.length,
+      sheet_sample: seen,
+    },
+  };
 }
 
 // ─── 懇親会／前夜祭の参加意思フラグ (POST action=mark_party_intent) ───

@@ -260,6 +260,8 @@ async function doCheckin(id) {
     showResult({ ok: false, error: 'Web App URL 未設定' }, id);
     return;
   }
+  console.log('[checkin] 送信ID:', JSON.stringify(id), '長さ:', id.length,
+    '文字コード:', id.split('').map(c => c.charCodeAt(0)));
   try {
     const r = await fetch(CONFIG.WEB_APP_URL, {
       method: 'POST',
@@ -267,9 +269,11 @@ async function doCheckin(id) {
       body: JSON.stringify({ action: mode, participant_id: id }),
     });
     const j = await r.json();
+    console.log('[checkin] レスポンス:', j);
     showResult(j, id);
     refreshStats();
   } catch (err) {
+    console.error('[checkin] 通信エラー:', err);
     showResult({ ok: false, error: err.message || '通信エラー' }, id);
   }
 }
