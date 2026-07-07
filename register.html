@@ -12,7 +12,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="icon" type="image/png" href="assets/bni-logo.png" />
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Cormorant+Garamond:ital,wght@1,500;1,700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<!-- QR ライブラリ: cdnjs 優先、失敗時 jsdelivr → unpkg にフォールバック（モバイル網の CDN ブロック対策） -->
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"
+        onerror="const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js';s.onerror=function(){const t=document.createElement('script');t.src='https://unpkg.com/qrcodejs@1.0.0/qrcode.min.js';document.head.appendChild(t);};document.head.appendChild(s);"></script>
 <style>
   :root {
     --bg: #ffffff; --bg-soft: #fbf6ec; --fg: #1a1612; --fg-soft: #5a4a3a;
@@ -1176,36 +1180,81 @@ function renderSuccess() {
       ${paymentSectionHtml}
     </div>
   `;
-  // QR generate
-  setTimeout(() => {
-    const container = document.getElementById('qr-container');
-    if (container && window.QRCode) {
-      try {
-        container.innerHTML = ''; // clear placeholder
-        new QRCode(container, {
-          text: state.result.participant_id,
-          width: 220,
-          height: 220,
-          colorDark: '#1a1612',
-          colorLight: '#fbf6ec',
-          correctLevel: QRCode.CorrectLevel.H
-        });
-        // QRCode.js は <img> と <canvas> 両方を生成する。
-        // 表示の整合性のため <img> のみ残し、確実に中央寄せにする。
-        setTimeout(() => {
-          const img = container.querySelector('img');
-          if (img) {
-            container.innerHTML = '';
-            img.style.cssText = 'display:block;margin:0 auto;width:220px;height:220px;';
-            container.appendChild(img);
-          }
-        }, 60);
-      } catch (err) {
-        console.error('QR生成エラー:', err);
-        container.innerHTML = '<div style="color: var(--shu); font-weight: 700; text-align: center; padding: 20px;">⚠ QR コード生成に失敗しました<br><small style="font-size: 11px;">participant_id: ' + escapeHtml(state.result.participant_id) + '</small></div>';
-      }
+  // QR generate（ライブラリ読み込み待ち + リトライ + フォールバック）
+  generateQrCode(state.result.participant_id);
+}
+
+// 外部 CDN の QR ライブラリが遅延ロード / ブロック / タイムアウトする対策:
+// ・最大 5秒 (500ms × 10回) 待機して QRCode の準備を確認
+// ・準備できたら描画、できなければ Google Chart API 経由のフォールバック
+// ・両方失敗しても participant_id 大きく表示（手入力チェックイン可能）
+function generateQrCode(pid, attempt) {
+  attempt = attempt || 0;
+  const container = document.getElementById('qr-container');
+  if (!container) return;
+  if (!pid) {
+    container.innerHTML = '<div style="color: var(--shu); font-weight: 700; padding: 20px;">⚠ 参加者IDが未設定</div>';
+    return;
+  }
+  // ライブラリ待機
+  if (!window.QRCode) {
+    if (attempt < 10) {
+      console.log('[QR] QRCode ライブラリ待機中... attempt ' + (attempt + 1));
+      setTimeout(() => generateQrCode(pid, attempt + 1), 500);
+      return;
     }
-  }, 100);
+    console.warn('[QR] QRCode ライブラリロード失敗、フォールバックに切替');
+    fallbackQrImage(container, pid);
+    return;
+  }
+  try {
+    container.innerHTML = '';
+    new QRCode(container, {
+      text: pid,
+      width: 220, height: 220,
+      colorDark: '#1a1612', colorLight: '#fbf6ec',
+      correctLevel: QRCode.CorrectLevel.H
+    });
+    setTimeout(() => {
+      const img = container.querySelector('img');
+      if (img) {
+        container.innerHTML = '';
+        img.style.cssText = 'display:block;margin:0 auto;width:220px;height:220px;';
+        img.alt = 'QR: ' + pid;
+        container.appendChild(img);
+      } else if (!container.querySelector('canvas') && !container.querySelector('table')) {
+        // <img>も<canvas>も<table>も生成されていない → 生成失敗
+        fallbackQrImage(container, pid);
+      }
+    }, 80);
+  } catch (err) {
+    console.error('[QR] 生成エラー:', err);
+    fallbackQrImage(container, pid);
+  }
+}
+
+// フォールバック: 外部 API（Google Chart は 2019 廃止、代わりに QuickChart.io を使用）
+// これも失敗したら participant_id を大きく表示（手入力チェックイン可能）
+function fallbackQrImage(container, pid) {
+  console.log('[QR] フォールバック QR に切替 (participant_id: ' + pid + ')');
+  const url = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&ecc=H&data=' + encodeURIComponent(pid);
+  const img = new Image();
+  img.width = 220; img.height = 220;
+  img.style.cssText = 'display:block;margin:0 auto;width:220px;height:220px;';
+  img.alt = 'QR: ' + pid;
+  img.onload = () => {
+    container.innerHTML = '';
+    container.appendChild(img);
+  };
+  img.onerror = () => {
+    console.error('[QR] フォールバックも失敗');
+    container.innerHTML = '<div style="text-align:center;padding:16px;background:#fff8e1;border:1.5px dashed #c89615;">' +
+      '<div style="font-size:12px;font-weight:700;color:#5a4a3a;margin-bottom:8px;">QRコード生成に失敗しました</div>' +
+      '<div style="font-family:JetBrains Mono,monospace;font-size:24px;font-weight:800;color:#d63b2c;letter-spacing:0.05em;padding:12px 0;">' + escapeHtml(pid) + '</div>' +
+      '<div style="font-size:11px;color:#5a4a3a;">この参加者IDを受付でお伝えください</div>' +
+      '</div>';
+  };
+  img.src = url;
 }
 
 function escapeHtml(s) {
